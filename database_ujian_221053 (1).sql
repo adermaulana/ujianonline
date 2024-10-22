@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 11, 2024 at 04:51 PM
+-- Generation Time: Oct 22, 2024 at 02:31 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -83,8 +83,12 @@ CREATE TABLE `pilihan_221053` (
 CREATE TABLE `soal_ujian_221053` (
   `id_221053` int(11) NOT NULL,
   `ujian_id_221053` int(11) NOT NULL,
-  `teks_soal_221053` text NOT NULL,
-  `tipe_soal_221053` enum('pilihan_ganda','essay') NOT NULL
+  `pertanyaan_221053` text NOT NULL,
+  `opsi_a` varchar(255) NOT NULL,
+  `opsi_b` varchar(255) NOT NULL,
+  `opsi_c` varchar(255) NOT NULL,
+  `opsi_d` varchar(255) NOT NULL,
+  `jawaban_benar` enum('A','B','C','D') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -125,7 +129,8 @@ CREATE TABLE `users_221053` (
 INSERT INTO `users_221053` (`id_221053`, `nama_221053`, `username_221053`, `password_221053`, `role_221053`, `active_221053`) VALUES
 (1, 'admin', 'dosen', 'ce28eed1511f631af6b2a7bb0a85d636', 'dosen', 1),
 (2, 'madun', 'madun', '827ccb0eea8a706c4c34a16891f84e7b', 'dosen', 0),
-(3, 'ultra', 'ultra', '827ccb0eea8a706c4c34a16891f84e7b', 'mahasiswa', 1);
+(3, 'ultra', 'ultra', '827ccb0eea8a706c4c34a16891f84e7b', 'mahasiswa', 1),
+(5, 'd', 'd', 'd41d8cd98f00b204e9800998ecf8427e', 'mahasiswa', 1);
 
 --
 -- Indexes for dumped tables
@@ -228,7 +233,7 @@ ALTER TABLE `ujian_221053`
 -- AUTO_INCREMENT for table `users_221053`
 --
 ALTER TABLE `users_221053`
-  MODIFY `id_221053` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_221053` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
