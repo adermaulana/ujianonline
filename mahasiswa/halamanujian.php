@@ -31,7 +31,7 @@ if($_SESSION['status'] != 'login'){
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.php">Dosen</a>
+            <a class="navbar-brand ps-3" href="index.php">Mahasiswa</a>
             <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search-->
@@ -61,35 +61,22 @@ if($_SESSION['status'] != 'login'){
                             <div class="sb-sidenav-menu-heading">Interface</div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                                Data Soal
+                                Mulai Ujian
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="soal.php">Lihat Soal</a>
-                                    <a class="nav-link" href="tambahsoal.php">Tambah Soal</a>
+                                    <a class="nav-link" href="ujian.php">Ujian</a>
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                                Data Ujian
+                                Hasil Ujian
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
                             <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                    <a class="nav-link" href="ujian.php">Lihat Ujian</a>
-                                    <a class="nav-link" href="tambahujian.php">Tambah Ujian</a>
-                                </nav>
-                            </div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#mahasiswa" aria-expanded="false" aria-controls="collapsePages">
-                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                                Data Mahasiswa
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="mahasiswa" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                    <a class="nav-link" href="mahasiswa.php">Lihat Mahasiswa</a>
-                                    <a class="nav-link" href="tambahmahasiswa.php">Tambah Mahasiswa</a>
+                                    <a class="nav-link" href="hasilujian.php">Hasil Ujian</a>
                                 </nav>
                             </div>
                         </div>
@@ -101,55 +88,53 @@ if($_SESSION['status'] != 'login'){
                 </nav>
             </div>
             <div id="layoutSidenav_content">
-                <main>
-                    <div class="container-fluid px-4">
-                        <h1 class="mt-4">Data Mahasiswa</h1>
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <a class="btn btn-success" href="tambahmahasiswa.php">Tambah Data</a>
-                            </div>
-                            <div class="card-body">
-                                <table id="datatablesSimple">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Nama</th>
-                                            <th>Username</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Nama</th>
-                                            <th>Username</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        <?php
-                                            $no = 1;
-                                            $tampil = mysqli_query($koneksi, "SELECT * FROM users_221053 where role_221053 = 'mahasiswa'");
-                                            while($data = mysqli_fetch_array($tampil)):
-                                        ?>
-                                        <tr>
-                                            <td><?= $no++ ?></td>
-                                            <td><?= $data['nama_221053'] ?></td>
-                                            <td><?= $data['username_221053'] ?></td>
-                                            <td>
-                                                <a class="btn btn-warning" href="">Edit</a>
-                                                <a class="btn btn-danger" href="">Hapus</a>
-                                            </td>
-                                        </tr>
-                                        <?php
-                                            endwhile; 
-                                        ?>
-                                    </tbody>
-                                </table>
-                            </div>
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Ujian</h1>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <!-- Timer Ujian -->
+                            <h4>Sisa Waktu: <span id="timer">60:00</span></h4>
+
+                            <!-- Soal Ujian Statik -->
+                            <form action="submit_ujian.php" method="POST">
+                                <div class="mb-3">
+                                    <label class="form-label">1. Apa ibu kota dari Indonesia?</label>
+                                    <div>
+                                        <input type="radio" name="soal_1" value="A" required> A. Surabaya<br>
+                                        <input type="radio" name="soal_1" value="B" required> B. Medan<br>
+                                        <input type="radio" name="soal_1" value="C" required> C. Jakarta<br>
+                                        <input type="radio" name="soal_1" value="D" required> D. Bandung<br>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">2. Apa warna langit pada siang hari?</label>
+                                    <div>
+                                        <input type="radio" name="soal_2" value="A" required> A. Biru<br>
+                                        <input type="radio" name="soal_2" value="B" required> B. Merah<br>
+                                        <input type="radio" name="soal_2" value="C" required> C. Hitam<br>
+                                        <input type="radio" name="soal_2" value="D" required> D. Putih<br>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">3. Apa nama hewan yang memiliki belalai?</label>
+                                    <div>
+                                        <input type="radio" name="soal_3" value="A" required> A. Singa<br>
+                                        <input type="radio" name="soal_3" value="B" required> B. Gajah<br>
+                                        <input type="radio" name="soal_3" value="C" required> C. Kucing<br>
+                                        <input type="radio" name="soal_3" value="D" required> D. Kuda<br>
+                                    </div>
+                                </div>
+
+                                <!-- Tombol Submit -->
+                                <button type="submit" class="btn btn-primary">Kirim Jawaban</button>
+                            </form>
                         </div>
                     </div>
-                </main>
+                </div>
+            </main>
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
@@ -168,5 +153,57 @@ if($_SESSION['status'] != 'login'){
         <script src="../assets/js/scripts.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="../assets/js/datatables-simple-demo.js"></script>
+
+    <!-- Script Timer -->
+    <script>
+        const totalTime = 3600; // Waktu ujian dalam detik (60 menit)
+        const timerEl = document.getElementById('timer');
+        const ujianKey = 'ujianTime'; // Key untuk menyimpan waktu di localStorage
+        let sisaWaktu;
+
+        // Cek apakah ada data di localStorage
+        if (localStorage.getItem(ujianKey)) {
+            const startTime = parseInt(localStorage.getItem(ujianKey), 10);
+            const now = Math.floor(Date.now() / 1000);
+            sisaWaktu = totalTime - (now - startTime);
+
+            // Jika waktu habis
+            if (sisaWaktu <= 0) {
+                alert('Waktu habis! Jawaban akan dikirim otomatis.');
+                document.forms[0].submit();
+            }
+        } else {
+            // Simpan waktu mulai ujian jika belum ada di localStorage
+            localStorage.setItem(ujianKey, Math.floor(Date.now() / 1000));
+            sisaWaktu = totalTime;
+        }
+
+        function startTimer() {
+            const interval = setInterval(function() {
+                if (sisaWaktu <= 0) {
+                    clearInterval(interval);
+                    alert('Waktu habis! Jawaban akan dikirim otomatis.');
+                    document.forms[0].submit();
+                }
+
+                // Hitung menit dan detik
+                const minutes = Math.floor(sisaWaktu / 60);
+                let seconds = sisaWaktu % 60;
+                seconds = seconds < 10 ? '0' + seconds : seconds;
+
+                // Tampilkan di HTML
+                timerEl.textContent = minutes + ":" + seconds;
+
+                // Kurangi sisa waktu
+                sisaWaktu--;
+
+                // Simpan kembali waktu ujian yang tersisa setiap detik
+                localStorage.setItem(ujianKey, Math.floor(Date.now() / 1000) - (totalTime - sisaWaktu));
+            }, 1000);
+        }
+
+        // Mulai timer saat halaman dibuka
+        startTimer();
+    </script>
     </body>
 </html>

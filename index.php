@@ -6,7 +6,7 @@
 
     if(isset($_SESSION['status']) == 'login'){
 
-        header("location:admin");
+        header("location:dosen");
     }
 
     if (isset($_POST['login'])) {
@@ -19,6 +19,13 @@
                                     AND `role_221053` = 'dosen'
                                     AND `active_221053` = 1");
         $cek = mysqli_num_rows($login);
+
+        $loginMahasiswa = mysqli_query($koneksi, "SELECT * FROM `users_221053`
+                                    WHERE `username_221053` = '$username'
+                                    AND `password_221053` = '$password'
+                                    AND `role_221053` = 'mahasiswa'
+                                    AND `active_221053` = 1");
+        $cekMahasiswa = mysqli_num_rows($loginMahasiswa);
     
         if ($cek > 0) {
             // Ambil data user
@@ -30,6 +37,16 @@
             $_SESSION['status'] = "login";
             // Redirect ke halaman admin
             header('location:dosen');
+        } else if ($cekMahasiswa > 0) {
+            // Ambil data user
+            $admin_data = mysqli_fetch_assoc($loginMahasiswa);
+            // Simpan data ke dalam session
+            $_SESSION['id_mahasiswa'] = $admin_data['id_221053  ']; // Pastikan sesuai dengan nama kolom di database
+            $_SESSION['nama_mahasiswa'] = $admin_data['name_221053']; // Pastikan sesuai dengan nama kolom di database
+            $_SESSION['username_mahasiswa'] = $username;
+            $_SESSION['status'] = "login";
+            // Redirect ke halaman admin
+            header('location:mahasiswa');
         } else {
             echo "<script>
                 alert('Login Gagal, Periksa Username dan Password Anda!');
@@ -43,56 +60,64 @@
 
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Login - SB Admin</title>
+        <link href="assets/css/styles.css" rel="stylesheet" />
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    </head>
+    <body class="bg-primary">
+        <div id="layoutAuthentication">
+            <div id="layoutAuthentication_content">
+                <main>
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-5">
+                                <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Login</h3></div>
+                                    <div class="card-body">
+                                        <form method="POST">
+                                            <div class="form-floating mb-3">
+                                                <input class="form-control" id="username" type="text" name="username" placeholder="Username" />
+                                                <label for="username">Username</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input class="form-control" id="password" type="password" name="password" placeholder="Password" />
+                                                <label for="password">Password</label>
+                                            </div>
+                                            <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                                                <button class="btn btn-primary" type="submit" name="login">Login</button>
+                                            </div>
+                                        </form>
+                                    </div>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Mazer Admin Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/bootstrap.css">
-    <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
-    <link rel="stylesheet" href="assets/css/app.css">
-    <link rel="stylesheet" href="assets/css/pages/auth.css">
-</head>
-
-<body>
-    <div id="auth">
-
-        <div class="row h-100">
-            <div class="col-lg-5 col-12">
-                <div id="auth-left">
-                    <div class="auth-logo">
-                        <a href="index.html"><img src="assets/images/logo/logo.png" alt="Logo"></a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <h1 class="auth-title">Log in.</h1>
-                    <p class="auth-subtitle mb-5">Masukkan Username dan Password Anda.</p>
-
-                    <form method="POST">
-                        <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="text" class="form-control form-control-xl" name="username" placeholder="Username">
-                            <div class="form-control-icon">
-                                <i class="bi bi-person"></i>
-                            </div>
-                        </div>
-                        <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="password" class="form-control form-control-xl" name="password" placeholder="Password">
-                            <div class="form-control-icon">
-                                <i class="bi bi-shield-lock"></i>
-                            </div>
-                        </div>
-                        <button type="submit" name="login" class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Log in</button>
-                    </form>
-
-                </div>
+                </main>
             </div>
-            <div class="col-lg-7 d-none d-lg-block">
-                <div id="auth-right">
-
-                </div>
+            <div id="layoutAuthentication_footer">
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid px-4">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                            <div>
+                                <a href="#">Privacy Policy</a>
+                                &middot;
+                                <a href="#">Terms &amp; Conditions</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
             </div>
         </div>
-
-    </div>
-</body>
-
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="assets/js/scripts.js"></script>
+    </body>
 </html>
+

@@ -13,6 +13,36 @@ if($_SESSION['status'] != 'login'){
 
 }
 
+if (isset($_POST['simpan'])) {
+    // Check if email already exists
+    $username = $_POST['username'];
+    $checkUsername = mysqli_query($koneksi, "SELECT * FROM users_221053 WHERE username_221053='$username'");
+
+    if (mysqli_num_rows($checkUsername) > 0) {
+        echo "<script>
+                alert('User sudah terdaftar!');
+                document.location='tambahmahasiswa.php';
+              </script>";
+    } else {
+        // Hash the password using md5
+        $hashedPassword = md5($_POST['password']);
+        $active = true;
+        // Insert new user into the database
+        $simpan = mysqli_query($koneksi, "INSERT INTO users_221053 (nama_221053, username_221053, password_221053,active_221053, role_221053) VALUES ('$_POST[name]', '$username', '$hashedPassword','$active','$_POST[role]')");
+
+        if ($simpan) {
+            echo "<script>
+                    alert('Simpan data sukses!');
+                    document.location='mahasiswa.php';
+                </script>";
+        } else {
+            echo "<script>
+                    alert('Simpan data Gagal!');
+                    document.location='mahasiswa.php';
+                </script>";
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -103,82 +133,64 @@ if($_SESSION['status'] != 'login'){
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Dashboard</h1>
-                        <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">Dashboard</li>
-                        </ol>
-                        <div class="row">
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-primary text-white mb-4">
-                                    <div class="card-body">Jumlah Soal</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">3</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-warning text-white mb-4">
-                                    <div class="card-body">Jumlah Dosen</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">3</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-success text-white mb-4">
-                                    <div class="card-body">Jumlah Mahasiswa</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">4</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-danger text-white mb-4">
-                                    <div class="card-body">Jumlah Mata Kuliah</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">10</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <h1 class="mt-4">Tambah Soal</h1>
                         <div class="card mb-4">
-                            <div class="card-header">
-                                Data Ujian Hari Ini
-                            </div>
                             <div class="card-body">
-                                <table id="datatablesSimple">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Nama Ujian</th>
-                                            <th>Waktu Mulai</th>
-                                            <th>Waktu Selesai</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Nama Ujian</th>
-                                            <th>Waktu Mulai</th>
-                                            <th>Waktu Selesai</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Ujian Matematika</td>
-                                            <td>09.00</td>
-                                            <td>10.30</td>
-                                            <td>Nonaktif</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <form action="/path/to/submit" method="POST">
+                                <!-- Pilih Ujian -->
+                                <div class="mb-3 col-6">
+                                    <label for="ujian_id_221053" class="form-label">Pilih Ujian</label>
+                                    <select class="form-control" id="ujian_id_221053" name="ujian_id_221053" required>
+                                        <option disabled selected>Pilih Ujian</option>
+                                        <option value="1">Ujian Matematika</option>
+                                        <option value="2">Ujian Fisika</option>
+                                    </select>
+                                </div>
+
+                                <!-- Input Pertanyaan -->
+                                <div class="mb-3 col-6">
+                                    <label for="pertanyaan_221053" class="form-label">Pertanyaan</label>
+                                    <textarea class="form-control" id="pertanyaan_221053" name="pertanyaan_221053" rows="3" required></textarea>
+                                </div>
+
+                                <!-- Opsi Jawaban A -->
+                                <div class="mb-3 col-6">
+                                    <label for="opsi_a_221053" class="form-label">Opsi A</label>
+                                    <input type="text" class="form-control" id="opsi_a_221053" name="opsi_a_221053" required>
+                                </div>
+
+                                <!-- Opsi Jawaban B -->
+                                <div class="mb-3 col-6">
+                                    <label for="opsi_b_221053" class="form-label">Opsi B</label>
+                                    <input type="text" class="form-control" id="opsi_b_221053" name="opsi_b_221053" required>
+                                </div>
+
+                                <!-- Opsi Jawaban C -->
+                                <div class="mb-3 col-6">
+                                    <label for="opsi_c_221053" class="form-label">Opsi C</label>
+                                    <input type="text" class="form-control" id="opsi_c_221053" name="opsi_c_221053" required>
+                                </div>
+
+                                <!-- Opsi Jawaban D -->
+                                <div class="mb-3 col-6">
+                                    <label for="opsi_d_221053" class="form-label">Opsi D</label>
+                                    <input type="text" class="form-control" id="opsi_d_221053" name="opsi_d_221053" required>
+                                </div>
+
+                                <!-- Input Jawaban Benar -->
+                                <div class="mb-3 col-6">
+                                    <label for="jawaban_benar_221053" class="form-label">Jawaban Benar</label>
+                                    <select class="form-control" id="jawaban_benar_221053" name="jawaban_benar_221053" required>
+                                        <option disabled selected>Pilih</option>
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                        <option value="C">C</option>
+                                        <option value="D">D</option>
+                                    </select>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Tambah Soal</button>
+                            </form>
                             </div>
                         </div>
                     </div>
@@ -199,9 +211,6 @@ if($_SESSION['status'] != 'login'){
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="../assets/js/scripts.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-        <script src="../assets/demo/chart-area-demo.js"></script>
-        <script src="../assets/demo/chart-bar-demo.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="../assets/js/datatables-simple-demo.js"></script>
     </body>

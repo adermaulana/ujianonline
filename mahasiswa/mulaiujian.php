@@ -31,7 +31,7 @@ if($_SESSION['status'] != 'login'){
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.php">Dosen</a>
+            <a class="navbar-brand ps-3" href="index.php">Mahasiswa</a>
             <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search-->
@@ -61,35 +61,22 @@ if($_SESSION['status'] != 'login'){
                             <div class="sb-sidenav-menu-heading">Interface</div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                                Data Soal
+                                Mulai Ujian
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="soal.php">Lihat Soal</a>
-                                    <a class="nav-link" href="tambahsoal.php">Tambah Soal</a>
+                                    <a class="nav-link" href="ujian.php">Ujian</a>
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                                Data Ujian
+                                Hasil Ujian
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
                             <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                    <a class="nav-link" href="ujian.php">Lihat Ujian</a>
-                                    <a class="nav-link" href="tambahujian.php">Tambah Ujian</a>
-                                </nav>
-                            </div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#mahasiswa" aria-expanded="false" aria-controls="collapsePages">
-                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                                Data Mahasiswa
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="mahasiswa" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                    <a class="nav-link" href="mahasiswa.php">Lihat Mahasiswa</a>
-                                    <a class="nav-link" href="tambahmahasiswa.php">Tambah Mahasiswa</a>
+                                    <a class="nav-link" href="hasilujian.php">Hasil Ujian</a>
                                 </nav>
                             </div>
                         </div>
@@ -103,49 +90,19 @@ if($_SESSION['status'] != 'login'){
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Data Mahasiswa</h1>
+                        <h1 class="mt-4">Mulai Ujian</h1>
                         <div class="card mb-4">
-                            <div class="card-header">
-                                <a class="btn btn-success" href="tambahmahasiswa.php">Tambah Data</a>
-                            </div>
                             <div class="card-body">
-                                <table id="datatablesSimple">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Nama</th>
-                                            <th>Username</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Nama</th>
-                                            <th>Username</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        <?php
-                                            $no = 1;
-                                            $tampil = mysqli_query($koneksi, "SELECT * FROM users_221053 where role_221053 = 'mahasiswa'");
-                                            while($data = mysqli_fetch_array($tampil)):
-                                        ?>
-                                        <tr>
-                                            <td><?= $no++ ?></td>
-                                            <td><?= $data['nama_221053'] ?></td>
-                                            <td><?= $data['username_221053'] ?></td>
-                                            <td>
-                                                <a class="btn btn-warning" href="">Edit</a>
-                                                <a class="btn btn-danger" href="">Hapus</a>
-                                            </td>
-                                        </tr>
-                                        <?php
-                                            endwhile; 
-                                        ?>
-                                    </tbody>
-                                </table>
+                                <!-- Informasi Ujian -->
+                                <h4>Judul Ujian: <strong>Statistika</strong></h4>
+                                <p><strong>Durasi:</strong> 90 menit</p>
+                                <p><strong>Tanggal Ujian:</strong> 22 Oktober 2024</p>
+                                <p><strong>Petunjuk:</strong> Pastikan Anda menyelesaikan semua soal sebelum waktu habis. Waktu akan mulai dihitung setelah Anda menekan tombol "Mulai Ujian".</p>
+
+                                <!-- Tombol Mulai Ujian -->
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success btn-lg" id="startExamBtn">Mulai Ujian</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -168,5 +125,14 @@ if($_SESSION['status'] != 'login'){
         <script src="../assets/js/scripts.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="../assets/js/datatables-simple-demo.js"></script>
+
+        <script>
+            // Fungsi untuk mengarahkan ke halaman soal ketika tombol mulai ujian diklik
+            document.getElementById('startExamBtn').addEventListener('click', function() {
+                // Redirect ke halaman soal ujian atau mulai timer ujian
+                window.location.href = "halamanujian.php"; // Ganti dengan URL halaman soal
+            });
+        </script>
+
     </body>
 </html>
