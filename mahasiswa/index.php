@@ -13,6 +13,30 @@ if($_SESSION['status'] != 'login'){
 
 }
 
+$soal = "SELECT COUNT(*) as id_221053 FROM soal_ujian_221053";
+$resultsoal = $koneksi->query($soal);
+$rowsoal = $resultsoal->fetch_assoc();
+$jumlah_soal = $rowsoal["id_221053"];
+
+
+//get semua dosen
+$dosen = "SELECT COUNT(*) as id_221053 FROM users_221053 WHERE role_221053 = 'dosen'";
+$resultdosen = $koneksi->query($dosen);
+$rowdosen = $resultdosen->fetch_assoc();
+$jumlah_dosen = $rowdosen["id_221053"];
+
+//get semua mahasiswa
+$mahasiswa = "SELECT COUNT(*) as id_221053 FROM users_221053 WHERE role_221053 = 'mahasiswa'";
+$resultmahasiswa = $koneksi->query($mahasiswa);
+$rowmahasiswa = $resultmahasiswa->fetch_assoc();
+$jumlah_mahasiswa = $rowmahasiswa["id_221053"];
+
+//get semua mata kuliah
+$matakuliah = "SELECT COUNT(*) as id_221053 FROM mata_kuliah_221053";
+$resultmatakuliah = $koneksi->query($matakuliah);
+$rowmatakuliah = $resultmatakuliah->fetch_assoc();
+$jumlah_matakuliah = $rowmatakuliah["id_221053"];
+
 ?>
 
 <!DOCTYPE html>
@@ -99,7 +123,7 @@ if($_SESSION['status'] != 'login'){
                                 <div class="card bg-primary text-white mb-4">
                                     <div class="card-body">Jumlah Soal</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">3</a>
+                                        <span class="small text-white stretched-link" ><?= $jumlah_soal ?></span>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
@@ -108,7 +132,7 @@ if($_SESSION['status'] != 'login'){
                                 <div class="card bg-warning text-white mb-4">
                                     <div class="card-body">Jumlah Dosen</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">3</a>
+                                        <span class="small text-white stretched-link"><?= $jumlah_dosen ?></span>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
@@ -117,7 +141,7 @@ if($_SESSION['status'] != 'login'){
                                 <div class="card bg-success text-white mb-4">
                                     <div class="card-body">Jumlah Mahasiswa</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">4</a>
+                                        <span class="small text-white stretched-link" ><?= $jumlah_mahasiswa ?></span>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
@@ -126,7 +150,7 @@ if($_SESSION['status'] != 'login'){
                                 <div class="card bg-danger text-white mb-4">
                                     <div class="card-body">Jumlah Mata Kuliah</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">10</a>
+                                        <span class="small text-white stretched-link"><?= $jumlah_matakuliah ?></span>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
