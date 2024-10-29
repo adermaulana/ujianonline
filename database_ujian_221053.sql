@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 22, 2024 at 02:31 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Oct 29, 2024 at 11:34 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -61,6 +61,13 @@ CREATE TABLE `mata_kuliah_221053` (
   `kode_221053` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `mata_kuliah_221053`
+--
+
+INSERT INTO `mata_kuliah_221053` (`id_221053`, `nama_221053`, `kode_221053`) VALUES
+(2, 'Bunaken', '1212');
+
 -- --------------------------------------------------------
 
 --
@@ -84,12 +91,19 @@ CREATE TABLE `soal_ujian_221053` (
   `id_221053` int(11) NOT NULL,
   `ujian_id_221053` int(11) NOT NULL,
   `pertanyaan_221053` text NOT NULL,
-  `opsi_a` varchar(255) NOT NULL,
-  `opsi_b` varchar(255) NOT NULL,
-  `opsi_c` varchar(255) NOT NULL,
-  `opsi_d` varchar(255) NOT NULL,
-  `jawaban_benar` enum('A','B','C','D') NOT NULL
+  `opsi_a_221053` varchar(255) NOT NULL,
+  `opsi_b_221053` varchar(255) NOT NULL,
+  `opsi_c_221053` varchar(255) NOT NULL,
+  `opsi_d_221053` varchar(255) NOT NULL,
+  `jawaban_benar_221053` enum('A','B','C','D') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `soal_ujian_221053`
+--
+
+INSERT INTO `soal_ujian_221053` (`id_221053`, `ujian_id_221053`, `pertanyaan_221053`, `opsi_a_221053`, `opsi_b_221053`, `opsi_c_221053`, `opsi_d_221053`, `jawaban_benar_221053`) VALUES
+(1, 3, 's', 'Rambo', 'Umay', 'umi', 'omo', 'C');
 
 -- --------------------------------------------------------
 
@@ -101,11 +115,18 @@ CREATE TABLE `ujian_221053` (
   `id_221053` int(11) NOT NULL,
   `mata_kuliah_id_221053` int(11) NOT NULL,
   `judul_221053` varchar(255) NOT NULL,
-  `waktu_mulai_221053` datetime NOT NULL,
-  `waktu_selesai_221053` datetime NOT NULL,
+  `waktu_mulai_221053` time NOT NULL,
+  `waktu_selesai_221053` time NOT NULL,
   `status_221053` enum('aktif','nonaktif') DEFAULT 'aktif',
   `users_id_221053` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `ujian_221053`
+--
+
+INSERT INTO `ujian_221053` (`id_221053`, `mata_kuliah_id_221053`, `judul_221053`, `waktu_mulai_221053`, `waktu_selesai_221053`, `status_221053`, `users_id_221053`) VALUES
+(3, 2, 'ujian', '11:22:00', '12:12:00', 'nonaktif', 3);
 
 -- --------------------------------------------------------
 
@@ -127,10 +148,10 @@ CREATE TABLE `users_221053` (
 --
 
 INSERT INTO `users_221053` (`id_221053`, `nama_221053`, `username_221053`, `password_221053`, `role_221053`, `active_221053`) VALUES
-(1, 'admin', 'dosen', 'ce28eed1511f631af6b2a7bb0a85d636', 'dosen', 1),
+(1, 'dosen', 'dosen', 'ce28eed1511f631af6b2a7bb0a85d636', 'dosen', 1),
 (2, 'madun', 'madun', '827ccb0eea8a706c4c34a16891f84e7b', 'dosen', 0),
-(3, 'ultra', 'ultra', '827ccb0eea8a706c4c34a16891f84e7b', 'mahasiswa', 1),
-(5, 'd', 'd', 'd41d8cd98f00b204e9800998ecf8427e', 'mahasiswa', 1);
+(3, 'ultra', 'ultranya', '827ccb0eea8a706c4c34a16891f84e7b', 'mahasiswa', 1),
+(5, 'mahasiswa', 'mahasiswa', '5787be38ee03a9ae5360f54d9026465f', 'mahasiswa', 1);
 
 --
 -- Indexes for dumped tables
@@ -209,7 +230,7 @@ ALTER TABLE `jawaban_mahasiswa_221053`
 -- AUTO_INCREMENT for table `mata_kuliah_221053`
 --
 ALTER TABLE `mata_kuliah_221053`
-  MODIFY `id_221053` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_221053` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `pilihan_221053`
@@ -221,19 +242,19 @@ ALTER TABLE `pilihan_221053`
 -- AUTO_INCREMENT for table `soal_ujian_221053`
 --
 ALTER TABLE `soal_ujian_221053`
-  MODIFY `id_221053` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_221053` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `ujian_221053`
 --
 ALTER TABLE `ujian_221053`
-  MODIFY `id_221053` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_221053` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users_221053`
 --
 ALTER TABLE `users_221053`
-  MODIFY `id_221053` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_221053` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables

@@ -13,32 +13,17 @@ if($_SESSION['status'] != 'login'){
 
 }
 
+if(isset($_GET['hal']) == "hapus"){
 
-if (isset($_POST['simpan'])) {
-    // Mengambil data dari form
-    $nama_ujian = $_POST['judul_221053'];
-    $mata_kuliah_id = $_POST['mata_kuliah_id_221053'];
-    $waktu_mulai = $_POST['waktu_mulai_221053'];
-    $waktu_selesai = $_POST['waktu_selesai_221053'];
-    $status = $_POST['status_221053'];
-    $users_id = $_POST['users_id_221053'];
-
-    // Menyimpan data ke database
-    $simpan = mysqli_query($koneksi, "INSERT INTO ujian_221053 (judul_221053, mata_kuliah_id_221053, waktu_mulai_221053, waktu_selesai_221053, status_221053, users_id_221053) VALUES ('$nama_ujian', '$mata_kuliah_id', '$waktu_mulai', '$waktu_selesai', '$status', '$users_id')");
-
-    if ($simpan) {
+    $hapus = mysqli_query($koneksi, "DELETE FROM mata_kuliah_221053 WHERE id_221053 = '$_GET[id]'");
+  
+    if($hapus){
         echo "<script>
-                alert('Simpan data sukses!');
-                document.location='ujian.php';
-            </script>";
-    } else {
-        echo "<script>
-                alert('Simpan data Gagal!');
-                document.location='ujian.php';
-            </script>";
+        alert('Hapus data sukses!');
+        document.location='matakuliah.php';
+        </script>";
     }
-}
-
+  }
 
 ?>
 
@@ -141,75 +126,49 @@ if (isset($_POST['simpan'])) {
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Tambah Ujian</h1>
+                        <h1 class="mt-4">Data Mata Kuliah</h1>
                         <div class="card mb-4">
+                            <div class="card-header">
+                                <a class="btn btn-success" href="tambahmatakuliah.php">Tambah Data</a>
+                            </div>
                             <div class="card-body">
-                            <form  method="POST">
-                                <!-- Pilih Ujian -->
-
-                                <div class="mb-3 col-6">
-                                    <label for="judul_221053" class="form-label">Nama Ujian</label>
-                                    <input type="text" class="form-control" id="judul_221053" name="judul_221053" required>
-                                </div>
-
-                                <div class="mb-3 col-6">
-                                    <label for="mata_kuliah_id_221053" class="form-label">Mata Kuliah</label>
-                                    <select class="form-control" id="mata_kuliah_id_221053" name="mata_kuliah_id_221053" required>
-                                        <option disabled selected>Pilih Matkul</option>
-                                        <?php
-                                            $no = 1;
-                                            $tampil = mysqli_query($koneksi, "SELECT * FROM mata_kuliah_221053");
-                                            while($data = mysqli_fetch_array($tampil)):
-                                        ?>
-                                        <option value="<?= $data['id_221053'] ?>"><?= $data['kode_221053'] ?> - <?= $data['nama_221053'] ?></option>
-                                        <?php
-                                            endwhile; 
-                                        ?>
-                                    </select>
-                                </div>
-
-
-                                <!-- Opsi Jawaban A -->
-                                <div class="mb-3 col-6">
-                                    <label for="waktu_mulai_221053" class="form-label">Waktu Mulai</label>
-                                    <input type="time" class="form-control" id="waktu_mulai_221053" name="waktu_mulai_221053" required>
-                                </div>
-
-                                <!-- Opsi Jawaban B -->
-                                <div class="mb-3 col-6">
-                                    <label for="waktu_selesai_221053" class="form-label">Waktu Selesai</label>
-                                    <input type="time" class="form-control" id="waktu_selesai_221053" name="waktu_selesai_221053" required>
-                                </div>
-
-                                <!-- Opsi Jawaban C -->
-                                <div class="mb-3 col-6">
-                                    <label for="status_221053" class="form-label">Status</label>
-                                    <select class="form-control" id="status_221053" name="status_221053" required>
-                                        <option disabled selected>Pilih Status</option>
-                                        <option value="aktif">Aktif</option>
-                                        <option value="nonaktif">Nonaktif</option>
-                                    </select>
-                                </div>
-
-                                <div class="mb-3 col-6">
-                                    <label for="users_id_221053" class="form-label">Mahasiswa Yang Ikut</label>
-                                    <select class="form-control" id="users_id_221053" name="users_id_221053" required>
-                                        <option disabled selected>Pilih Mahasiswa</option>
-                                        <?php
-                                            $no = 1;
-                                            $tampil = mysqli_query($koneksi, "SELECT * FROM users_221053 WHERE role_221053 = 'mahasiswa'");
-                                            while($data = mysqli_fetch_array($tampil)):
-                                        ?>
-                                        <option value="<?= $data['id_221053'] ?>"><?= $data['nama_221053'] ?></option>
+                                <table id="datatablesSimple">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Kode</th>
+                                            <th>Nama Matakuliah</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Kode</th>
+                                            <th>Nama Matakuliah</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                    <?php
+                                        $no = 1;
+                                        $tampil = mysqli_query($koneksi, "SELECT * FROM mata_kuliah_221053");
+                                        while($data = mysqli_fetch_array($tampil)):
+                                    ?>
+                                        <tr>
+                                            <td><?= $no++ ?></td>
+                                            <td><?= $data['kode_221053'] ?></td>
+                                            <td><?= $data['nama_221053'] ?></td>
+                                            <td>
+                                                <a class="btn btn-warning" href="editmatakuliah.php?hal=edit&id=<?= $data['id_221053']?>">Edit</a>
+                                                <a class="btn btn-danger" href="matakuliah.php?hal=hapus&id=<?= $data['id_221053']?>" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')">Hapus</a>
+                                            </td>
+                                        </tr>
                                         <?php
                                             endwhile; 
                                         ?>
-                                    </select>
-                                </div>
-
-
-                                <button type="submit" name="simpan" class="btn btn-primary">Tambah Ujian</button>
-                            </form>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

@@ -81,6 +81,17 @@ if($_SESSION['status'] != 'login'){
                                     <a class="nav-link" href="tambahujian.php">Tambah Ujian</a>
                                 </nav>
                             </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#matkul" aria-expanded="false" aria-controls="collapsePages">
+                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                                Data Mata Kuliah
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="matkul" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <a class="nav-link" href="matakuliah.php">Lihat Mata Kuliah</a>
+                                    <a class="nav-link" href="tambahmatakuliah.php">Tambah Mata Kuliah</a>
+                                </nav>
+                            </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#mahasiswa" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Data Mahasiswa
@@ -103,9 +114,9 @@ if($_SESSION['status'] != 'login'){
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Dashboard</h1>
+                        <h1 class="mt-4">Welcome, <?= $_SESSION['nama_admin'] ?></h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">Dashboard</li>
+
                         </ol>
                         <div class="row">
                             <div class="col-xl-3 col-md-6">

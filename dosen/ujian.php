@@ -13,6 +13,18 @@ if($_SESSION['status'] != 'login'){
 
 }
 
+if(isset($_GET['hal']) == "hapus"){
+
+    $hapus = mysqli_query($koneksi, "DELETE FROM ujian_221053 WHERE id_221053 = '$_GET[id]'");
+  
+    if($hapus){
+        echo "<script>
+        alert('Hapus data sukses!');
+        document.location='ujian.php';
+        </script>";
+    }
+  }
+
 ?>
 
 <!DOCTYPE html>
@@ -81,6 +93,17 @@ if($_SESSION['status'] != 'login'){
                                     <a class="nav-link" href="tambahujian.php">Tambah Ujian</a>
                                 </nav>
                             </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#matkul" aria-expanded="false" aria-controls="collapsePages">
+                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                                Data Mata Kuliah
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="matkul" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <a class="nav-link" href="matakuliah.php">Lihat Mata Kuliah</a>
+                                    <a class="nav-link" href="tambahmatakuliah.php">Tambah Mata Kuliah</a>
+                                </nav>
+                            </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#mahasiswa" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Data Mahasiswa
@@ -131,17 +154,25 @@ if($_SESSION['status'] != 'login'){
                                         </tr>
                                     </tfoot>
                                     <tbody>
+                                    <?php
+                                        $no = 1;
+                                        $tampil = mysqli_query($koneksi, "SELECT * FROM ujian_221053");
+                                        while($data = mysqli_fetch_array($tampil)):
+                                    ?>
                                         <tr>
-                                            <td>1</td>
-                                            <td>Ujian Matematika</td>
-                                            <td>09.00</td>
-                                            <td>10.30</td>
-                                            <td>Aktif</td>
+                                            <td><?= $no++ ?></td>
+                                            <td><?= $data['judul_221053'] ?></td>
+                                            <td><?= $data['waktu_mulai_221053'] ?></td>
+                                            <td><?= $data['waktu_selesai_221053'] ?></td>
+                                            <td><?= $data['status_221053'] ?></td>
                                             <td>
-                                                <a class="btn btn-warning" href="">Edit</a>
-                                                <a class="btn btn-danger" href="">Hapus</a>
+                                                <a class="btn btn-warning" href="editujian.php?hal=edit&id=<?= $data['id_221053']?>">Edit</a>
+                                                <a class="btn btn-danger" href="ujian.php?hal=hapus&id=<?= $data['id_221053']?>" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')">Hapus</a>
                                             </td>
                                         </tr>
+                                        <?php
+                                            endwhile; 
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>

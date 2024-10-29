@@ -31,8 +31,8 @@
             // Ambil data user
             $admin_data = mysqli_fetch_assoc($login);
             // Simpan data ke dalam session
-            $_SESSION['id_admin'] = $admin_data['id_221053  ']; // Pastikan sesuai dengan nama kolom di database
-            $_SESSION['nama_admin'] = $admin_data['name_221053']; // Pastikan sesuai dengan nama kolom di database
+            $_SESSION['id_admin'] = $admin_data['id_221053']; // Pastikan sesuai dengan nama kolom di database
+            $_SESSION['nama_admin'] = $admin_data['nama_221053']; // Pastikan sesuai dengan nama kolom di database
             $_SESSION['username_admin'] = $username;
             $_SESSION['status'] = "login";
             // Redirect ke halaman admin
@@ -41,8 +41,8 @@
             // Ambil data user
             $admin_data = mysqli_fetch_assoc($loginMahasiswa);
             // Simpan data ke dalam session
-            $_SESSION['id_mahasiswa'] = $admin_data['id_221053  ']; // Pastikan sesuai dengan nama kolom di database
-            $_SESSION['nama_mahasiswa'] = $admin_data['name_221053']; // Pastikan sesuai dengan nama kolom di database
+            $_SESSION['id_mahasiswa'] = $admin_data['id_221053']; // Pastikan sesuai dengan nama kolom di database
+            $_SESSION['nama_mahasiswa'] = $admin_data['nama_221053']; // Pastikan sesuai dengan nama kolom di database
             $_SESSION['username_mahasiswa'] = $username;
             $_SESSION['status'] = "login";
             // Redirect ke halaman admin

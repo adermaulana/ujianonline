@@ -13,36 +13,34 @@ if($_SESSION['status'] != 'login'){
 
 }
 
-if (isset($_POST['simpan'])) {
-    // Check if email already exists
-    $username = $_POST['username'];
-    $checkUsername = mysqli_query($koneksi, "SELECT * FROM users_221053 WHERE username_221053='$username'");
 
-    if (mysqli_num_rows($checkUsername) > 0) {
+if (isset($_POST['simpan'])) { // Ubah 'simpan' menjadi 'submit'
+    // Mengambil data dari form
+    $ujian_id = $_POST['ujian_id_221053'];
+    $pertanyaan = $_POST['pertanyaan_221053'];
+    $opsi_a = $_POST['opsi_a_221053'];
+    $opsi_b = $_POST['opsi_b_221053'];
+    $opsi_c = $_POST['opsi_c_221053'];
+    $opsi_d = $_POST['opsi_d_221053'];
+    $jawaban_benar = $_POST['jawaban_benar_221053'];
+
+    // Menyimpan data ke database
+    $simpan = mysqli_query($koneksi, "INSERT INTO soal_ujian_221053 (ujian_id_221053, pertanyaan_221053, opsi_a_221053, opsi_b_221053, opsi_c_221053, opsi_d_221053, jawaban_benar_221053) VALUES ('$ujian_id', '$pertanyaan', '$opsi_a', '$opsi_b', '$opsi_c', '$opsi_d', '$jawaban_benar')");
+
+    if ($simpan) {
         echo "<script>
-                alert('User sudah terdaftar!');
-                document.location='tambahmahasiswa.php';
-              </script>";
+                alert('Simpan data sukses!');
+                document.location='soal.php'; // Ganti dengan halaman yang sesuai
+            </script>";
     } else {
-        // Hash the password using md5
-        $hashedPassword = md5($_POST['password']);
-        $active = true;
-        // Insert new user into the database
-        $simpan = mysqli_query($koneksi, "INSERT INTO users_221053 (nama_221053, username_221053, password_221053,active_221053, role_221053) VALUES ('$_POST[name]', '$username', '$hashedPassword','$active','$_POST[role]')");
-
-        if ($simpan) {
-            echo "<script>
-                    alert('Simpan data sukses!');
-                    document.location='mahasiswa.php';
-                </script>";
-        } else {
-            echo "<script>
-                    alert('Simpan data Gagal!');
-                    document.location='mahasiswa.php';
-                </script>";
-        }
+        echo "<script>
+                alert('Simpan data Gagal!');
+                document.location='soal.php'; // Ganti dengan halaman yang sesuai
+            </script>";
     }
 }
+
+
 ?>
 
 <!DOCTYPE html>
@@ -111,6 +109,17 @@ if (isset($_POST['simpan'])) {
                                     <a class="nav-link" href="tambahujian.php">Tambah Ujian</a>
                                 </nav>
                             </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#matkul" aria-expanded="false" aria-controls="collapsePages">
+                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                                Data Mata Kuliah
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="matkul" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <a class="nav-link" href="matakuliah.php">Lihat Mata Kuliah</a>
+                                    <a class="nav-link" href="tambahmatakuliah.php">Tambah Mata Kuliah</a>
+                                </nav>
+                            </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#mahasiswa" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Data Mahasiswa
@@ -136,14 +145,21 @@ if (isset($_POST['simpan'])) {
                         <h1 class="mt-4">Tambah Soal</h1>
                         <div class="card mb-4">
                             <div class="card-body">
-                            <form action="/path/to/submit" method="POST">
+                            <form method="POST">
                                 <!-- Pilih Ujian -->
                                 <div class="mb-3 col-6">
                                     <label for="ujian_id_221053" class="form-label">Pilih Ujian</label>
                                     <select class="form-control" id="ujian_id_221053" name="ujian_id_221053" required>
                                         <option disabled selected>Pilih Ujian</option>
-                                        <option value="1">Ujian Matematika</option>
-                                        <option value="2">Ujian Fisika</option>
+                                        <?php
+                                        $no = 1;
+                                        $tampil = mysqli_query($koneksi, "SELECT * FROM ujian_221053");
+                                        while($data = mysqli_fetch_array($tampil)):
+                                        ?>
+                                        <option value="<?= $data['id_221053'] ?>"><?= $data['judul_221053'] ?></option>
+                                        <?php
+                                        endwhile; 
+                                        ?>
                                     </select>
                                 </div>
 
@@ -189,7 +205,7 @@ if (isset($_POST['simpan'])) {
                                     </select>
                                 </div>
 
-                                <button type="submit" class="btn btn-primary">Tambah Soal</button>
+                                <button type="submit" name="simpan" class="btn btn-primary">Tambah Soal</button>
                             </form>
                             </div>
                         </div>

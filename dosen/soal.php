@@ -13,6 +13,18 @@ if($_SESSION['status'] != 'login'){
 
 }
 
+if(isset($_GET['hal']) == "hapus"){
+
+    $hapus = mysqli_query($koneksi, "DELETE FROM soal_ujian_221053 WHERE id_221053 = '$_GET[id]'");
+  
+    if($hapus){
+        echo "<script>
+        alert('Hapus data sukses!');
+        document.location='ujian.php';
+        </script>";
+    }
+  }
+
 ?>
 
 <!DOCTYPE html>
@@ -81,6 +93,17 @@ if($_SESSION['status'] != 'login'){
                                     <a class="nav-link" href="tambahujian.php">Tambah Ujian</a>
                                 </nav>
                             </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#matkul" aria-expanded="false" aria-controls="collapsePages">
+                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                                Data Mata Kuliah
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="matkul" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <a class="nav-link" href="matakuliah.php">Lihat Mata Kuliah</a>
+                                    <a class="nav-link" href="tambahmatakuliah.php">Tambah Mata Kuliah</a>
+                                </nav>
+                            </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#mahasiswa" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Data Mahasiswa
@@ -115,27 +138,56 @@ if($_SESSION['status'] != 'login'){
                                             <th>No</th>
                                             <th>Soal</th>
                                             <th>Pertanyaan</th>
+                                            <th>Opsi A</th>
+                                            <th>Opsi B</th>
+                                            <th>Opsi C</th>
+                                            <th>Opsi D</th>
+                                            <th>Jawaban</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
                                             <th>No</th>
-                                            <th>Nama</th>
-                                            <th>Username</th>
+                                            <th>Ujian</th>
+                                            <th>Pertanyaan</th>
+                                            <th>Opsi A</th>
+                                            <th>Opsi B</th>
+                                            <th>Opsi C</th>
+                                            <th>Opsi D</th>
+                                            <th>Jawaban</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
+                                    <?php
+                                        $no = 1;
+                                        $tampil = mysqli_query($koneksi, "SELECT 
+                                                                                su.*, 
+                                                                                u.judul_221053 AS nama_ujian 
+                                                                            FROM 
+                                                                                soal_ujian_221053 su 
+                                                                            JOIN 
+                                                                                ujian_221053 u ON su.ujian_id_221053 = u.id_221053");
+                                        while($data = mysqli_fetch_array($tampil)):
+                                    ?>
                                         <tr>
-                                            <td>1</td>
-                                            <td>Soal Matematika</td>
-                                            <td>2 + 2 =</td>
+                                            <td><?= $no++ ?></td>
+                                            <td><?= $data['nama_ujian'] ?></td>
+                                            <td><?= $data['pertanyaan_221053'] ?></td>
+                                            <td><?= $data['opsi_a_221053'] ?></td>
+                                            <td><?= $data['opsi_b_221053'] ?></td>
+                                            <td><?= $data['opsi_c_221053'] ?></td>
+                                            <td><?= $data['opsi_d_221053'] ?></td>
+                                            <td><?= $data['jawaban_benar_221053'] ?></td>
                                             <td>
-                                                <a class="btn btn-warning" href="">Edit</a>
-                                                <a class="btn btn-danger" href="">Hapus</a>
+                                                <a class="btn btn-warning"href="editsoal.php?hal=edit&id=<?= $data['id_221053']?>">Edit</a>
+                                                <a class="btn btn-danger" href="soal.php?hal=hapus&id=<?= $data['id_221053']?>" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')">Hapus</a>
                                             </td>
                                         </tr>
+                                        <?php
+                                            endwhile; 
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>

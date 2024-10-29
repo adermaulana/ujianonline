@@ -14,27 +14,54 @@ if($_SESSION['status'] != 'login'){
 }
 
 
+if(isset($_GET['hal'])){
+    if($_GET['hal'] == "edit"){
+        $tampil = mysqli_query($koneksi, "SELECT * FROM soal_ujian_221053 WHERE id_221053 = '$_GET[id]'");
+        $data = mysqli_fetch_array($tampil);
+        if($data){
+            $id = $data['id_221053'];
+            $ujian_id_221053 = $data['ujian_id_221053'];
+            $pertanyaan_221053 = $data['pertanyaan_221053'];
+            $opsi_a_221053 = $data['opsi_a_221053'];
+            $opsi_b_221053 = $data['opsi_b_221053'];
+            $opsi_c_221053 = $data['opsi_c_221053'];
+            $opsi_d_221053 = $data['opsi_d_221053'];
+            $jawaban_benar_221053 = $data['jawaban_benar_221053'];
+        }
+    }
+}
+
+//Perintah Mengubah Data
 if (isset($_POST['simpan'])) {
     // Mengambil data dari form
-    $nama_ujian = $_POST['judul_221053'];
-    $mata_kuliah_id = $_POST['mata_kuliah_id_221053'];
-    $waktu_mulai = $_POST['waktu_mulai_221053'];
-    $waktu_selesai = $_POST['waktu_selesai_221053'];
-    $status = $_POST['status_221053'];
-    $users_id = $_POST['users_id_221053'];
+    $ujian_id_221053 = $_POST['ujian_id_221053'];
+    $pertanyaan_221053 = $_POST['pertanyaan_221053'];
+    $opsi_a_221053 = $_POST['opsi_a_221053'];
+    $opsi_b_221053 = $_POST['opsi_b_221053'];
+    $opsi_c_221053 = $_POST['opsi_c_221053'];
+    $opsi_d_221053 = $_POST['opsi_d_221053'];
+    $jawaban_benar_221053 = $_POST['jawaban_benar_221053'];
 
     // Menyimpan data ke database
-    $simpan = mysqli_query($koneksi, "INSERT INTO ujian_221053 (judul_221053, mata_kuliah_id_221053, waktu_mulai_221053, waktu_selesai_221053, status_221053, users_id_221053) VALUES ('$nama_ujian', '$mata_kuliah_id', '$waktu_mulai', '$waktu_selesai', '$status', '$users_id')");
+    $simpan = mysqli_query($koneksi, "UPDATE soal_ujian_221053 SET
+                                        ujian_id_221053 = '$ujian_id_221053',
+                                        pertanyaan_221053 = '$pertanyaan_221053',
+                                        opsi_a_221053 = '$opsi_a_221053',
+                                        opsi_b_221053 = '$opsi_b_221053',
+                                        opsi_c_221053 = '$opsi_c_221053',
+                                        opsi_d_221053 = '$opsi_d_221053',
+                                        jawaban_benar_221053 = '$jawaban_benar_221053' 
+                                        WHERE id_221053 = '$_GET[id]'");
 
     if ($simpan) {
         echo "<script>
-                alert('Simpan data sukses!');
-                document.location='ujian.php';
+                alert('Edit data sukses!');
+                document.location='soal.php';
             </script>";
     } else {
         echo "<script>
-                alert('Simpan data Gagal!');
-                document.location='ujian.php';
+                alert('Edit data Gagal!');
+                document.location='soal.php';
             </script>";
     }
 }
@@ -141,74 +168,71 @@ if (isset($_POST['simpan'])) {
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Tambah Ujian</h1>
+                        <h1 class="mt-4">Edit Soal</h1>
                         <div class="card mb-4">
                             <div class="card-body">
-                            <form  method="POST">
+                            <form method="POST">
                                 <!-- Pilih Ujian -->
-
                                 <div class="mb-3 col-6">
-                                    <label for="judul_221053" class="form-label">Nama Ujian</label>
-                                    <input type="text" class="form-control" id="judul_221053" name="judul_221053" required>
-                                </div>
-
-                                <div class="mb-3 col-6">
-                                    <label for="mata_kuliah_id_221053" class="form-label">Mata Kuliah</label>
-                                    <select class="form-control" id="mata_kuliah_id_221053" name="mata_kuliah_id_221053" required>
-                                        <option disabled selected>Pilih Matkul</option>
+                                    <label for="ujian_id_221053" class="form-label">Pilih Ujian</label>
+                                    <select class="form-control" id="ujian_id_221053" name="ujian_id_221053" required>
+                                        <option disabled>Pilih Ujian</option>
                                         <?php
-                                            $no = 1;
-                                            $tampil = mysqli_query($koneksi, "SELECT * FROM mata_kuliah_221053");
-                                            while($data = mysqli_fetch_array($tampil)):
+                                        $tampil = mysqli_query($koneksi, "SELECT * FROM ujian_221053");
+                                        while($data = mysqli_fetch_array($tampil)):
+                                            // Menandai ujian yang sudah ada dalam mode edit
+                                            $selected = (isset($ujian_id_221053) && $ujian_id_221053 == $data['id_221053']) ? 'selected' : '';
                                         ?>
-                                        <option value="<?= $data['id_221053'] ?>"><?= $data['kode_221053'] ?> - <?= $data['nama_221053'] ?></option>
-                                        <?php
-                                            endwhile; 
-                                        ?>
+                                        <option value="<?= $data['id_221053'] ?>" <?= $selected ?>><?= $data['judul_221053'] ?></option>
+                                        <?php endwhile; ?>
                                     </select>
                                 </div>
 
 
+                                <!-- Input Pertanyaan -->
+                                <div class="mb-3 col-6">
+                                    <label for="pertanyaan_221053" class="form-label">Pertanyaan</label>
+                                    <textarea class="form-control" id="pertanyaan_221053" value="<?= $pertanyaan_221053 ?>" name="pertanyaan_221053" rows="3" required><?= $pertanyaan_221053 ?></textarea>
+                                </div>
+
                                 <!-- Opsi Jawaban A -->
                                 <div class="mb-3 col-6">
-                                    <label for="waktu_mulai_221053" class="form-label">Waktu Mulai</label>
-                                    <input type="time" class="form-control" id="waktu_mulai_221053" name="waktu_mulai_221053" required>
+                                    <label for="opsi_a_221053" class="form-label">Opsi A</label>
+                                    <input type="text" class="form-control" id="opsi_a_221053" value="<?= $opsi_a_221053 ?>" name="opsi_a_221053" required>
                                 </div>
 
                                 <!-- Opsi Jawaban B -->
                                 <div class="mb-3 col-6">
-                                    <label for="waktu_selesai_221053" class="form-label">Waktu Selesai</label>
-                                    <input type="time" class="form-control" id="waktu_selesai_221053" name="waktu_selesai_221053" required>
+                                    <label for="opsi_b_221053" class="form-label">Opsi B</label>
+                                    <input type="text" class="form-control" id="opsi_b_221053" value="<?= $opsi_b_221053 ?>" name="opsi_b_221053" required>
                                 </div>
 
                                 <!-- Opsi Jawaban C -->
                                 <div class="mb-3 col-6">
-                                    <label for="status_221053" class="form-label">Status</label>
-                                    <select class="form-control" id="status_221053" name="status_221053" required>
-                                        <option disabled selected>Pilih Status</option>
-                                        <option value="aktif">Aktif</option>
-                                        <option value="nonaktif">Nonaktif</option>
-                                    </select>
+                                    <label for="opsi_c_221053" class="form-label">Opsi C</label>
+                                    <input type="text" class="form-control" id="opsi_c_221053" value="<?= $opsi_c_221053 ?>" name="opsi_c_221053" required>
                                 </div>
 
+                                <!-- Opsi Jawaban D -->
                                 <div class="mb-3 col-6">
-                                    <label for="users_id_221053" class="form-label">Mahasiswa Yang Ikut</label>
-                                    <select class="form-control" id="users_id_221053" name="users_id_221053" required>
-                                        <option disabled selected>Pilih Mahasiswa</option>
-                                        <?php
-                                            $no = 1;
-                                            $tampil = mysqli_query($koneksi, "SELECT * FROM users_221053 WHERE role_221053 = 'mahasiswa'");
-                                            while($data = mysqli_fetch_array($tampil)):
-                                        ?>
-                                        <option value="<?= $data['id_221053'] ?>"><?= $data['nama_221053'] ?></option>
-                                        <?php
-                                            endwhile; 
-                                        ?>
+                                    <label for="opsi_d_221053" class="form-label">Opsi D</label>
+                                    <input type="text" class="form-control" id="opsi_d_221053" value="<?= $opsi_d_221053 ?>" name="opsi_d_221053" required>
+                                </div>
+
+                                <!-- Input Jawaban Benar -->
+                                <div class="mb-3 col-6">
+                                    <label for="jawaban_benar_221053" class="form-label">Jawaban Benar</label>
+                                    <select class="form-control" id="jawaban_benar_221053" name="jawaban_benar_221053" required>
+                                        <option disabled>Pilih</option>
+                                        <option value="A" <?= (isset($jawaban_benar_221053) && $jawaban_benar_221053 == 'A') ? 'selected' : '' ?>>A</option>
+                                        <option value="B" <?= (isset($jawaban_benar_221053) && $jawaban_benar_221053 == 'B') ? 'selected' : '' ?>>B</option>
+                                        <option value="C" <?= (isset($jawaban_benar_221053) && $jawaban_benar_221053 == 'C') ? 'selected' : '' ?>>C</option>
+                                        <option value="D" <?= (isset($jawaban_benar_221053) && $jawaban_benar_221053 == 'D') ? 'selected' : '' ?>>D</option>
                                     </select>
                                 </div>
 
 
-                                <button type="submit" name="simpan" class="btn btn-primary">Tambah Ujian</button>
+                                <button type="submit" name="simpan" class="btn btn-primary">Edit Soal</button>
                             </form>
                             </div>
                         </div>
