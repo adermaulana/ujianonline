@@ -16,9 +16,16 @@
         $login = mysqli_query($koneksi, "SELECT * FROM `users_221053`
                                     WHERE `username_221053` = '$username'
                                     AND `password_221053` = '$password'
-                                    AND `role_221053` = 'dosen'
+                                    AND `role_221053` = 'admin'
                                     AND `active_221053` = 1");
         $cek = mysqli_num_rows($login);
+
+        $loginDosen = mysqli_query($koneksi, "SELECT * FROM `users_221053`
+                                        WHERE `username_221053` = '$username'
+                                        AND `password_221053` = '$password'
+                                        AND `role_221053` = 'dosen'
+                                        AND `active_221053` = 1");
+        $cekDosen = mysqli_num_rows($loginDosen);
 
         $loginMahasiswa = mysqli_query($koneksi, "SELECT * FROM `users_221053`
                                     WHERE `username_221053` = '$username'
@@ -36,7 +43,18 @@
             $_SESSION['username_admin'] = $username;
             $_SESSION['status'] = "login";
             // Redirect ke halaman admin
+            header('location:admin');
+        } else if ($cekDosen > 0) {
+            // Ambil data user
+            $admin_data = mysqli_fetch_assoc($loginDosen);
+            // Simpan data ke dalam session
+            $_SESSION['id_dosen'] = $admin_data['id_221053']; // Pastikan sesuai dengan nama kolom di database
+            $_SESSION['nama_dosen'] = $admin_data['nama_221053']; // Pastikan sesuai dengan nama kolom di database
+            $_SESSION['username_dosen'] = $username;
+            $_SESSION['status'] = "login";
+            // Redirect ke halaman admin
             header('location:dosen');
+
         } else if ($cekMahasiswa > 0) {
             // Ambil data user
             $admin_data = mysqli_fetch_assoc($loginMahasiswa);

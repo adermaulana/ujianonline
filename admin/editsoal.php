@@ -13,36 +13,60 @@ if($_SESSION['status'] != 'login'){
 
 }
 
-if (isset($_POST['simpan'])) {
-    // Check if email already exists
-    $username = $_POST['username'];
-    $checkUsername = mysqli_query($koneksi, "SELECT * FROM users_221053 WHERE username_221053='$username'");
 
-    if (mysqli_num_rows($checkUsername) > 0) {
-        echo "<script>
-                alert('User sudah terdaftar!');
-                document.location='tambahmahasiswa.php';
-              </script>";
-    } else {
-        // Hash the password using md5
-        $hashedPassword = md5($_POST['password']);
-        $active = true;
-        // Insert new user into the database
-        $simpan = mysqli_query($koneksi, "INSERT INTO users_221053 (nama_221053, username_221053, password_221053,active_221053, role_221053) VALUES ('$_POST[name]', '$username', '$hashedPassword','$active','$_POST[role]')");
-
-        if ($simpan) {
-            echo "<script>
-                    alert('Simpan data sukses!');
-                    document.location='mahasiswa.php';
-                </script>";
-        } else {
-            echo "<script>
-                    alert('Simpan data Gagal!');
-                    document.location='mahasiswa.php';
-                </script>";
+if(isset($_GET['hal'])){
+    if($_GET['hal'] == "edit"){
+        $tampil = mysqli_query($koneksi, "SELECT * FROM soal_ujian_221053 WHERE id_221053 = '$_GET[id]'");
+        $data = mysqli_fetch_array($tampil);
+        if($data){
+            $id = $data['id_221053'];
+            $ujian_id_221053 = $data['ujian_id_221053'];
+            $pertanyaan_221053 = $data['pertanyaan_221053'];
+            $opsi_a_221053 = $data['opsi_a_221053'];
+            $opsi_b_221053 = $data['opsi_b_221053'];
+            $opsi_c_221053 = $data['opsi_c_221053'];
+            $opsi_d_221053 = $data['opsi_d_221053'];
+            $jawaban_benar_221053 = $data['jawaban_benar_221053'];
         }
     }
 }
+
+//Perintah Mengubah Data
+if (isset($_POST['simpan'])) {
+    // Mengambil data dari form
+    $ujian_id_221053 = $_POST['ujian_id_221053'];
+    $pertanyaan_221053 = $_POST['pertanyaan_221053'];
+    $opsi_a_221053 = $_POST['opsi_a_221053'];
+    $opsi_b_221053 = $_POST['opsi_b_221053'];
+    $opsi_c_221053 = $_POST['opsi_c_221053'];
+    $opsi_d_221053 = $_POST['opsi_d_221053'];
+    $jawaban_benar_221053 = $_POST['jawaban_benar_221053'];
+
+    // Menyimpan data ke database
+    $simpan = mysqli_query($koneksi, "UPDATE soal_ujian_221053 SET
+                                        ujian_id_221053 = '$ujian_id_221053',
+                                        pertanyaan_221053 = '$pertanyaan_221053',
+                                        opsi_a_221053 = '$opsi_a_221053',
+                                        opsi_b_221053 = '$opsi_b_221053',
+                                        opsi_c_221053 = '$opsi_c_221053',
+                                        opsi_d_221053 = '$opsi_d_221053',
+                                        jawaban_benar_221053 = '$jawaban_benar_221053' 
+                                        WHERE id_221053 = '$_GET[id]'");
+
+    if ($simpan) {
+        echo "<script>
+                alert('Edit data sukses!');
+                document.location='soal.php';
+            </script>";
+    } else {
+        echo "<script>
+                alert('Edit data Gagal!');
+                document.location='soal.php';
+            </script>";
+    }
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -61,7 +85,7 @@ if (isset($_POST['simpan'])) {
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.php">Dosen</a>
+            <a class="navbar-brand ps-3" href="index.php">Admin</a>
             <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search-->
@@ -89,7 +113,7 @@ if (isset($_POST['simpan'])) {
                                 Dashboard
                             </a>
                             <div class="sb-sidenav-menu-heading">Interface</div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                            <!-- <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 Data Soal
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -110,7 +134,7 @@ if (isset($_POST['simpan'])) {
                                     <a class="nav-link" href="ujian.php">Lihat Ujian</a>
                                     <a class="nav-link" href="tambahujian.php">Tambah Ujian</a>
                                 </nav>
-                            </div>
+                            </div> -->
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#matkul" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Data Mata Kuliah
@@ -133,6 +157,17 @@ if (isset($_POST['simpan'])) {
                                     <a class="nav-link" href="tambahmahasiswa.php">Tambah Mahasiswa</a>
                                 </nav>
                             </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#dosen" aria-expanded="false" aria-controls="collapsePages">
+                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                                Data Dosen
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="dosen" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                <a class="nav-link" href="dosen.php">Lihat Dosen</a>
+                                <a class="nav-link" href="tambahdosen.php">Tambah Dosen</a>
+                                </nav>
+                            </div>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
@@ -144,24 +179,71 @@ if (isset($_POST['simpan'])) {
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Tambah Mahasiswa</h1>
+                        <h1 class="mt-4">Edit Soal</h1>
                         <div class="card mb-4">
                             <div class="card-body">
                             <form method="POST">
+                                <!-- Pilih Ujian -->
                                 <div class="mb-3 col-6">
-                                    <label for="nama_221053" class="form-label">Nama</label>
-                                    <input type="text" class="form-control" id="name" name="name" required>
+                                    <label for="ujian_id_221053" class="form-label">Pilih Ujian</label>
+                                    <select class="form-control" id="ujian_id_221053" name="ujian_id_221053" required>
+                                        <option disabled>Pilih Ujian</option>
+                                        <?php
+                                        $tampil = mysqli_query($koneksi, "SELECT * FROM ujian_221053");
+                                        while($data = mysqli_fetch_array($tampil)):
+                                            // Menandai ujian yang sudah ada dalam mode edit
+                                            $selected = (isset($ujian_id_221053) && $ujian_id_221053 == $data['id_221053']) ? 'selected' : '';
+                                        ?>
+                                        <option value="<?= $data['id_221053'] ?>" <?= $selected ?>><?= $data['judul_221053'] ?></option>
+                                        <?php endwhile; ?>
+                                    </select>
                                 </div>
+
+
+                                <!-- Input Pertanyaan -->
                                 <div class="mb-3 col-6">
-                                    <label for="username_221053" class="form-label">Username</label>
-                                    <input type="text" class="form-control" id="username" name="username" required>
+                                    <label for="pertanyaan_221053" class="form-label">Pertanyaan</label>
+                                    <textarea class="form-control" id="pertanyaan_221053" value="<?= $pertanyaan_221053 ?>" name="pertanyaan_221053" rows="3" required><?= $pertanyaan_221053 ?></textarea>
                                 </div>
+
+                                <!-- Opsi Jawaban A -->
                                 <div class="mb-3 col-6">
-                                    <label for="password_221053" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="password_221053" name="password_221053" required>
+                                    <label for="opsi_a_221053" class="form-label">Opsi A</label>
+                                    <input type="text" class="form-control" id="opsi_a_221053" value="<?= $opsi_a_221053 ?>" name="opsi_a_221053" required>
                                 </div>
-                                <input type="hidden" name="role" value="mahasiswa">
-                                <button type="submit" name="simpan" class="btn btn-primary">Tambah Mahasiswa</button>
+
+                                <!-- Opsi Jawaban B -->
+                                <div class="mb-3 col-6">
+                                    <label for="opsi_b_221053" class="form-label">Opsi B</label>
+                                    <input type="text" class="form-control" id="opsi_b_221053" value="<?= $opsi_b_221053 ?>" name="opsi_b_221053" required>
+                                </div>
+
+                                <!-- Opsi Jawaban C -->
+                                <div class="mb-3 col-6">
+                                    <label for="opsi_c_221053" class="form-label">Opsi C</label>
+                                    <input type="text" class="form-control" id="opsi_c_221053" value="<?= $opsi_c_221053 ?>" name="opsi_c_221053" required>
+                                </div>
+
+                                <!-- Opsi Jawaban D -->
+                                <div class="mb-3 col-6">
+                                    <label for="opsi_d_221053" class="form-label">Opsi D</label>
+                                    <input type="text" class="form-control" id="opsi_d_221053" value="<?= $opsi_d_221053 ?>" name="opsi_d_221053" required>
+                                </div>
+
+                                <!-- Input Jawaban Benar -->
+                                <div class="mb-3 col-6">
+                                    <label for="jawaban_benar_221053" class="form-label">Jawaban Benar</label>
+                                    <select class="form-control" id="jawaban_benar_221053" name="jawaban_benar_221053" required>
+                                        <option disabled>Pilih</option>
+                                        <option value="A" <?= (isset($jawaban_benar_221053) && $jawaban_benar_221053 == 'A') ? 'selected' : '' ?>>A</option>
+                                        <option value="B" <?= (isset($jawaban_benar_221053) && $jawaban_benar_221053 == 'B') ? 'selected' : '' ?>>B</option>
+                                        <option value="C" <?= (isset($jawaban_benar_221053) && $jawaban_benar_221053 == 'C') ? 'selected' : '' ?>>C</option>
+                                        <option value="D" <?= (isset($jawaban_benar_221053) && $jawaban_benar_221053 == 'D') ? 'selected' : '' ?>>D</option>
+                                    </select>
+                                </div>
+
+
+                                <button type="submit" name="simpan" class="btn btn-primary">Edit Soal</button>
                             </form>
                             </div>
                         </div>

@@ -156,7 +156,7 @@ $jumlah_matakuliah = $rowmatakuliah["id_221053"];
                                 </div>
                             </div>
                         </div>
-                        <div class="card mb-4">
+                        <!-- <div class="card mb-4">
                             <div class="card-header">
                                 Data Ujian Hari Ini
                             </div>
@@ -191,7 +191,7 @@ $jumlah_matakuliah = $rowmatakuliah["id_221053"];
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </main>
                 <footer class="py-4 bg-light mt-auto">

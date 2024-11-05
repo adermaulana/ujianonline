@@ -4,6 +4,8 @@ include '../koneksi.php';
 
 session_start();
 
+$id_dosen = $_SESSION['id_dosen'];
+
 if($_SESSION['status'] != 'login'){
 
     session_unset();
@@ -35,7 +37,7 @@ if(isset($_GET['hal']) == "hapus"){
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Dashboard - Admin</title>
+        <title>Dashboard - Dosen</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="../assets/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -71,17 +73,6 @@ if(isset($_GET['hal']) == "hapus"){
                                 Dashboard
                             </a>
                             <div class="sb-sidenav-menu-heading">Interface</div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                                Data Soal
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="soal.php">Lihat Soal</a>
-                                    <a class="nav-link" href="tambahsoal.php">Tambah Soal</a>
-                                </nav>
-                            </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Data Ujian
@@ -101,7 +92,6 @@ if(isset($_GET['hal']) == "hapus"){
                             <div class="collapse" id="matkul" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                                     <a class="nav-link" href="matakuliah.php">Lihat Mata Kuliah</a>
-                                    <a class="nav-link" href="tambahmatakuliah.php">Tambah Mata Kuliah</a>
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#mahasiswa" aria-expanded="false" aria-controls="collapsePages">
@@ -112,7 +102,6 @@ if(isset($_GET['hal']) == "hapus"){
                             <div class="collapse" id="mahasiswa" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                                     <a class="nav-link" href="mahasiswa.php">Lihat Mahasiswa</a>
-                                    <a class="nav-link" href="tambahmahasiswa.php">Tambah Mahasiswa</a>
                                 </nav>
                             </div>
                         </div>
@@ -132,49 +121,50 @@ if(isset($_GET['hal']) == "hapus"){
                                 <a class="btn btn-success" href="tambahujian.php">Tambah Data</a>
                             </div>
                             <div class="card-body">
-                                <table id="datatablesSimple">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Judul Ujian</th>
-                                            <th>Waktu Mulai</th>
-                                            <th>Waktu Selesai</th>
-                                            <th>Status</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Judul Ujian</th>
-                                            <th>Waktu Mulai</th>
-                                            <th>Waktu Selesai</th>
-                                            <th>Status</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
+                            <table id="datatablesSimple">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Judul Ujian</th>
+                                        <th>Waktu Mulai</th>
+                                        <th>Waktu Selesai</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Judul Ujian</th>
+                                        <th>Waktu Mulai</th>
+                                        <th>Waktu Selesai</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
                                     <?php
                                         $no = 1;
                                         $tampil = mysqli_query($koneksi, "SELECT * FROM ujian_221053");
-                                        while($data = mysqli_fetch_array($tampil)):
+                                        while ($data = mysqli_fetch_array($tampil)) {
                                     ?>
-                                        <tr>
-                                            <td><?= $no++ ?></td>
-                                            <td><?= $data['judul_221053'] ?></td>
-                                            <td><?= $data['waktu_mulai_221053'] ?></td>
-                                            <td><?= $data['waktu_selesai_221053'] ?></td>
-                                            <td><?= $data['status_221053'] ?></td>
-                                            <td>
-                                                <a class="btn btn-warning" href="editujian.php?hal=edit&id=<?= $data['id_221053']?>">Edit</a>
-                                                <a class="btn btn-danger" href="ujian.php?hal=hapus&id=<?= $data['id_221053']?>" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')">Hapus</a>
-                                            </td>
-                                        </tr>
-                                        <?php
-                                            endwhile; 
-                                        ?>
-                                    </tbody>
-                                </table>
+                                    <tr>
+                                        <td><?= $no++ ?></td>
+                                        <td><?= $data['judul_221053'] ?></td>
+                                        <td><?= $data['waktu_mulai_221053'] ?></td>
+                                        <td><?= $data['waktu_selesai_221053'] ?></td>
+                                        <td><?= $data['status_221053'] ?></td>
+                                        <td>
+                                            <a class="btn btn-warning" href="editujian.php?hal=edit&id=<?= $data['id_221053']?>">Edit</a>
+                                            <a class="btn btn-danger" href="ujian.php?hal=hapus&id=<?= $data['id_221053']?>" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')">Hapus</a>
+                                            <a class="btn btn-primary" href="soal.php?ujian_id=<?= $data['id_221053']?>">Lihat Soal</a>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                        }
+                                    ?>
+                                </tbody>
+                            </table>
                             </div>
                         </div>
                     </div>
@@ -195,6 +185,9 @@ if(isset($_GET['hal']) == "hapus"){
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="../assets/js/scripts.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+        <script src="../assets/demo/chart-area-demo.js"></script>
+        <script src="../assets/demo/chart-bar-demo.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="../assets/js/datatables-simple-demo.js"></script>
     </body>

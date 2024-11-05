@@ -14,7 +14,7 @@ if($_SESSION['status'] != 'login'){
 }
 
 if(isset($_POST['simpan'])){
-    $simpan = mysqli_query($koneksi, "INSERT INTO mata_kuliah_221053 (nama_221053, kode_221053 ) VALUES ('$_POST[nama_221053]','$_POST[kode_221053]')");
+    $simpan = mysqli_query($koneksi, "INSERT INTO mata_kuliah_221053 (nama_221053, kode_221053, id_dosen_221053 ) VALUES ('$_POST[nama_221053]','$_POST[kode_221053]','$_POST[id_dosen_221053]')");
   
     if($simpan){
         echo "<script>
@@ -48,7 +48,7 @@ if(isset($_POST['simpan'])){
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.php">Dosen</a>
+            <a class="navbar-brand ps-3" href="index.php">Admin</a>
             <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search-->
@@ -76,7 +76,7 @@ if(isset($_POST['simpan'])){
                                 Dashboard
                             </a>
                             <div class="sb-sidenav-menu-heading">Interface</div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                            <!-- <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 Data Soal
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -97,7 +97,7 @@ if(isset($_POST['simpan'])){
                                     <a class="nav-link" href="ujian.php">Lihat Ujian</a>
                                     <a class="nav-link" href="tambahujian.php">Tambah Ujian</a>
                                 </nav>
-                            </div>
+                            </div> -->
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#matkul" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Data Mata Kuliah
@@ -118,6 +118,17 @@ if(isset($_POST['simpan'])){
                                 <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                                     <a class="nav-link" href="mahasiswa.php">Lihat Mahasiswa</a>
                                     <a class="nav-link" href="tambahmahasiswa.php">Tambah Mahasiswa</a>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#dosen" aria-expanded="false" aria-controls="collapsePages">
+                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                                Data Dosen
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="dosen" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                <a class="nav-link" href="dosen.php">Lihat Dosen</a>
+                                <a class="nav-link" href="tambahdosen.php">Tambah Dosen</a>
                                 </nav>
                             </div>
                         </div>
@@ -146,6 +157,19 @@ if(isset($_POST['simpan'])){
                                 <div class="mb-3 col-6">
                                     <label for="kode_221053" class="form-label">Kode</label>
                                     <input type="text" class="form-control" id="kode_221053" name="kode_221053" required>
+                                </div>
+
+                                <div class="mb-3 col-6">
+                                    <label for="id_dosen_221053" class="form-label">Dosen Pengampu</label>
+                                    <select class="form-select" id="id_dosen_221053" name="id_dosen_221053" required>
+                                        <option value="">Pilih Dosen</option>
+                                        <?php
+                                            $dosen_query = mysqli_query($koneksi, "SELECT id_221053, nama_221053 FROM users_221053 WHERE role_221053 = 'dosen'");
+                                            while ($dosen = mysqli_fetch_array($dosen_query)) {
+                                                echo "<option value='{$dosen['id_221053']}'>{$dosen['nama_221053']}</option>";
+                                            }
+                                        ?>
+                                    </select>
                                 </div>
 
                                 <button type="submit" name="simpan" class="btn btn-primary">Tambah Mata Kuliah</button>

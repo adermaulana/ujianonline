@@ -4,6 +4,8 @@ include '../koneksi.php';
 
 session_start();
 
+$id_mahasiswa = $_SESSION['id_mahasiswa'];
+
 if($_SESSION['status'] != 'login'){
 
     session_unset();
@@ -89,44 +91,64 @@ if($_SESSION['status'] != 'login'){
             </div>
             <div id="layoutSidenav_content">
                 <main>
-                    <div class="container-fluid px-4">
-                        <h1 class="mt-4">Mulai Ujian</h1>
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <table id="datatablesSimple">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Judul Ujian</th>
-                                            <th>Waktu Mulai</th>
-                                            <th>Waktu Selesai</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Judul Ujian</th>
-                                            <th>Waktu Mulai</th>
-                                            <th>Waktu Selesai</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Ujian Matematika</td>
-                                            <td>09.00</td>
-                                            <td>10.30</td>
-                                            <td>
-                                                <a href="mulaiujian.php" class="btn btn-primary">Mulai</a>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Mulai Ujian</h1>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <table id="examTable" class="table table-striped table-bordered" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Mata Kuliah</th>
+                                        <th>Judul Ujian</th>
+                                        <th>Mulai</th>
+                                        <th>Selesai</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $sql = "SELECT 
+                                            u.id_221053,
+                                            u.mata_kuliah_id_221053,
+                                            m.nama_221053 AS mata_kuliah_nama,
+                                            u.judul_221053,
+                                            u.waktu_mulai_221053,
+                                            u.waktu_selesai_221053,
+                                            u.status_221053,
+                                            u.users_id_221053
+                                            FROM ujian_221053 u
+                                            JOIN mata_kuliah_221053 m ON u.mata_kuliah_id_221053 = m.id_221053
+                                            WHERE u.users_id_221053 = '$id_mahasiswa'
+                                            ORDER BY u.waktu_mulai_221053 ASC";
+                                    $result = $koneksi->query($sql);
+
+                                    $count = 1;
+                                    if ($result->num_rows > 0) {
+                                        while ($row = $result->fetch_assoc()) {
+                                            echo "<tr>";
+                                            echo "<td>" . $count . "</td>";
+                                            echo "<td>" . $row["mata_kuliah_nama"] . "</td>";
+                                            echo "<td>" . $row["judul_221053"] . "</td>";
+                                            echo "<td>" . $row["waktu_mulai_221053"] . "</td>";
+                                            echo "<td>" . $row["waktu_selesai_221053"] . "</td>";
+                                            echo "<td>" . $row["status_221053"] . "</td>";
+                                            echo "<td><a href='mulaiujian.php?id=" . $row["id_221053"] . "' class='btn btn-primary'>Mulai</a></td>";
+                                            echo "</tr>";
+                                            $count++;
+                                        }
+                                    } else {
+                                        echo "<tr><td colspan='7'>No exam data found for the user.</td></tr>";
+                                    }
+
+                                    $koneksi->close();
+                                    ?>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
+                </div>
                 </main>
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">

@@ -4,8 +4,6 @@ include '../koneksi.php';
 
 session_start();
 
-$id_dosen = $_SESSION['id_dosen'];
-
 if($_SESSION['status'] != 'login'){
 
     session_unset();
@@ -49,7 +47,7 @@ $jumlah_matakuliah = $rowmatakuliah["id_221053"];
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Dashboard - Dosen</title>
+        <title>Dashboard - Admin</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="../assets/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -57,7 +55,7 @@ $jumlah_matakuliah = $rowmatakuliah["id_221053"];
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.php">Dosen</a>
+            <a class="navbar-brand ps-3" href="index.php">Admin</a>
             <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search-->
@@ -85,6 +83,17 @@ $jumlah_matakuliah = $rowmatakuliah["id_221053"];
                                 Dashboard
                             </a>
                             <div class="sb-sidenav-menu-heading">Interface</div>
+                            <!-- <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                Data Soal
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="soal.php">Lihat Soal</a>
+                                    <a class="nav-link" href="tambahsoal.php">Tambah Soal</a>
+                                </nav>
+                            </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Data Ujian
@@ -95,7 +104,7 @@ $jumlah_matakuliah = $rowmatakuliah["id_221053"];
                                     <a class="nav-link" href="ujian.php">Lihat Ujian</a>
                                     <a class="nav-link" href="tambahujian.php">Tambah Ujian</a>
                                 </nav>
-                            </div>
+                            </div> -->
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#matkul" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Data Mata Kuliah
@@ -104,6 +113,7 @@ $jumlah_matakuliah = $rowmatakuliah["id_221053"];
                             <div class="collapse" id="matkul" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                                     <a class="nav-link" href="matakuliah.php">Lihat Mata Kuliah</a>
+                                    <a class="nav-link" href="tambahmatakuliah.php">Tambah Mata Kuliah</a>
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#mahasiswa" aria-expanded="false" aria-controls="collapsePages">
@@ -114,6 +124,18 @@ $jumlah_matakuliah = $rowmatakuliah["id_221053"];
                             <div class="collapse" id="mahasiswa" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                                     <a class="nav-link" href="mahasiswa.php">Lihat Mahasiswa</a>
+                                    <a class="nav-link" href="tambahmahasiswa.php">Tambah Mahasiswa</a>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#dosen" aria-expanded="false" aria-controls="collapsePages">
+                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                                Data Dosen
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="dosen" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                <a class="nav-link" href="dosen.php">Lihat Dosen</a>
+                                <a class="nav-link" href="tambahdosen.php">Tambah Dosen</a>
                                 </nav>
                             </div>
                         </div>
@@ -125,53 +147,86 @@ $jumlah_matakuliah = $rowmatakuliah["id_221053"];
                 </nav>
             </div>
             <div id="layoutSidenav_content">
-            <main>
+                <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Data Mata Kuliah</h1>
-                        <div class="card mb-4">
-                            <div class="card-body">
-                            <table id="datatablesSimple">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Kode</th>
-                                        <th>Nama Matakuliah</th>
-                                    </tr>
-                                </thead>
-                                <tfoot>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Kode</th>
-                                        <th>Nama Matakuliah</th>
-                                    </tr>
-                                </tfoot>
-                                <tbody>
-                                    <?php
-                                        $no = 1;
-                                        $tampil = mysqli_query($koneksi, "
-                                            SELECT 
-                                                mk.id_221053,
-                                                mk.kode_221053, 
-                                                mk.nama_221053,
-                                                u.nama_221053 as nama_dosen
-                                            FROM mata_kuliah_221053 mk
-                                            JOIN users_221053 u ON mk.id_dosen_221053 = u.id_221053
-                                            WHERE mk.id_dosen_221053 = '$id_dosen' AND u.role_221053 = 'dosen'
-                                        ");
-                                        while($data = mysqli_fetch_array($tampil)):
-                                    ?>
-                                    <tr>
-                                        <td><?= $no++ ?></td>
-                                        <td><?= $data['kode_221053'] ?></td>
-                                        <td><?= $data['nama_221053'] ?></td>
-                                    </tr>
-                                    <?php
-                                        endwhile; 
-                                    ?>
-                                </tbody>
-                            </table>
+                        <h1 class="mt-4">Welcome, <?= $_SESSION['nama_admin'] ?></h1>
+                        <ol class="breadcrumb mb-4">
+
+                        </ol>
+                        <div class="row">
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card bg-primary text-white mb-4">
+                                    <div class="card-body">Jumlah Soal</div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                        <span class="small text-white stretched-link" ><?= $jumlah_soal ?></span>
+                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card bg-warning text-white mb-4">
+                                    <div class="card-body">Jumlah Dosen</div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                        <span class="small text-white stretched-link"><?= $jumlah_dosen ?></span>
+                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card bg-success text-white mb-4">
+                                    <div class="card-body">Jumlah Mahasiswa</div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                        <span class="small text-white stretched-link" ><?= $jumlah_mahasiswa ?></span>
+                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card bg-danger text-white mb-4">
+                                    <div class="card-body">Jumlah Mata Kuliah</div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                        <span class="small text-white stretched-link"><?= $jumlah_matakuliah ?></span>
+                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <!-- <div class="card mb-4">
+                            <div class="card-header">
+                                Data Ujian Hari Ini
+                            </div>
+                            <div class="card-body">
+                                <table id="datatablesSimple">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama Ujian</th>
+                                            <th>Waktu Mulai</th>
+                                            <th>Waktu Selesai</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama Ujian</th>
+                                            <th>Waktu Mulai</th>
+                                            <th>Waktu Selesai</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Ujian Matematika</td>
+                                            <td>09.00</td>
+                                            <td>10.30</td>
+                                            <td>Nonaktif</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div> -->
                     </div>
                 </main>
                 <footer class="py-4 bg-light mt-auto">

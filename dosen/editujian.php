@@ -4,6 +4,8 @@ include '../koneksi.php';
 
 session_start();
 
+$id_dosen = $_SESSION['id_dosen'];
+
 if($_SESSION['status'] != 'login'){
 
     session_unset();
@@ -12,7 +14,6 @@ if($_SESSION['status'] != 'login'){
     header("location:../");
 
 }
-
 
 if(isset($_GET['hal'])){
     if($_GET['hal'] == "edit"){
@@ -53,16 +54,15 @@ if (isset($_POST['simpan'])) {
     if ($simpan) {
         echo "<script>
                 alert('Edit data sukses!');
-                document.location='matakuliah.php';
+                document.location='ujian.php';
             </script>";
     } else {
         echo "<script>
                 alert('Edit data Gagal!');
-                document.location='matakuliah.php';
+                document.location='ujian.php';
             </script>";
     }
 }
-
 
 ?>
 
@@ -74,7 +74,7 @@ if (isset($_POST['simpan'])) {
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Dashboard - Admin</title>
+        <title>Dashboard - Dosen</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="../assets/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -110,17 +110,6 @@ if (isset($_POST['simpan'])) {
                                 Dashboard
                             </a>
                             <div class="sb-sidenav-menu-heading">Interface</div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                                Data Soal
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="soal.php">Lihat Soal</a>
-                                    <a class="nav-link" href="tambahsoal.php">Tambah Soal</a>
-                                </nav>
-                            </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Data Ujian
@@ -140,7 +129,6 @@ if (isset($_POST['simpan'])) {
                             <div class="collapse" id="matkul" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                                     <a class="nav-link" href="matakuliah.php">Lihat Mata Kuliah</a>
-                                    <a class="nav-link" href="tambahmatakuliah.php">Tambah Mata Kuliah</a>
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#mahasiswa" aria-expanded="false" aria-controls="collapsePages">
@@ -151,7 +139,6 @@ if (isset($_POST['simpan'])) {
                             <div class="collapse" id="mahasiswa" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                                     <a class="nav-link" href="mahasiswa.php">Lihat Mahasiswa</a>
-                                    <a class="nav-link" href="tambahmahasiswa.php">Tambah Mahasiswa</a>
                                 </nav>
                             </div>
                         </div>
@@ -163,7 +150,7 @@ if (isset($_POST['simpan'])) {
                 </nav>
             </div>
             <div id="layoutSidenav_content">
-                <main>
+            <main>
                     <div class="container-fluid px-4">
                         <h1 class="mt-4">Edit Ujian</h1>
                         <div class="card mb-4">
@@ -257,6 +244,9 @@ if (isset($_POST['simpan'])) {
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="../assets/js/scripts.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+        <script src="../assets/demo/chart-area-demo.js"></script>
+        <script src="../assets/demo/chart-bar-demo.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="../assets/js/datatables-simple-demo.js"></script>
     </body>

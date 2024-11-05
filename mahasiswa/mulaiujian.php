@@ -4,6 +4,8 @@ include '../koneksi.php';
 
 session_start();
 
+$id_mahasiswa = $_SESSION['id_mahasiswa'];
+
 if($_SESSION['status'] != 'login'){
 
     session_unset();
@@ -12,6 +14,35 @@ if($_SESSION['status'] != 'login'){
     header("location:../");
 
 }
+
+$sql = "SELECT 
+          id_221053,
+          judul_221053,
+          waktu_mulai_221053,
+          waktu_selesai_221053
+        FROM ujian_221053
+        WHERE users_id_221053 = $id_mahasiswa
+        ORDER BY waktu_mulai_221053 ASC
+        LIMIT 1";
+$result = $koneksi->query($sql);
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $exam_id = $row["id_221053"];
+    $exam_title = $row["judul_221053"];
+    $exam_start_time = $row["waktu_mulai_221053"];
+    $exam_end_time = $row["waktu_selesai_221053"];
+
+    // Calculate the exam duration in minutes
+    $start_time = strtotime($exam_start_time);
+    $end_time = strtotime($exam_end_time);
+    $exam_duration = round(($end_time - $start_time) / 60);
+} else {
+    echo "No exam data found for the user.";
+    exit;
+}
+
+$koneksi->close();
 
 ?>
 
@@ -23,7 +54,7 @@ if($_SESSION['status'] != 'login'){
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Dashboard - Admin</title>
+        <title>Dashboard - Mahasiswa</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="../assets/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -88,25 +119,25 @@ if($_SESSION['status'] != 'login'){
                 </nav>
             </div>
             <div id="layoutSidenav_content">
-                <main>
-                    <div class="container-fluid px-4">
-                        <h1 class="mt-4">Mulai Ujian</h1>
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <!-- Informasi Ujian -->
-                                <h4>Judul Ujian: <strong>Statistika</strong></h4>
-                                <p><strong>Durasi:</strong> 90 menit</p>
-                                <p><strong>Tanggal Ujian:</strong> 22 Oktober 2024</p>
-                                <p><strong>Petunjuk:</strong> Pastikan Anda menyelesaikan semua soal sebelum waktu habis. Waktu akan mulai dihitung setelah Anda menekan tombol "Mulai Ujian".</p>
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Mulai Ujian</h1>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <!-- Informasi Ujian -->
+                            <h4>Judul Ujian: <strong><?php echo $exam_title; ?></strong></h4>
+                            <p><strong>Durasi:</strong> <?php echo $exam_duration; ?> menit</p>
+                            <p><strong>Tanggal Ujian:</strong> <?php echo date("d F Y", strtotime($exam_start_time)); ?></p>
+                            <p><strong>Petunjuk:</strong> Pastikan Anda menyelesaikan semua soal sebelum waktu habis. Waktu akan mulai dihitung setelah Anda menekan tombol "Mulai Ujian".</p>
 
-                                <!-- Tombol Mulai Ujian -->
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-success btn-lg" id="startExamBtn">Mulai Ujian</button>
-                                </div>
+                            <!-- Tombol Mulai Ujian -->
+                            <div class="d-grid gap-2">
+                                <a href="halamanujian.php?id=<?php echo $exam_id; ?>" class="btn btn-success btn-lg" id="startExamBtn">Mulai Ujian</a>
                             </div>
                         </div>
                     </div>
-                </main>
+                </div>
+            </main>
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">

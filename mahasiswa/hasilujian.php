@@ -4,6 +4,9 @@ include '../koneksi.php';
 
 session_start();
 
+$id_mahasiswa = $_SESSION['id_mahasiswa'];
+
+
 if($_SESSION['status'] != 'login'){
 
     session_unset();
@@ -12,6 +15,18 @@ if($_SESSION['status'] != 'login'){
     header("location:../");
 
 }
+
+$sql = "SELECT 
+    hu.id_221053,
+    u.judul_221053,
+    hu.nilai_221053,
+    hu.dikumpulkan_pada_221053
+FROM hasil_ujian_221053 hu
+JOIN ujian_221053 u ON hu.ujian_id_221053 = u.id_221053
+WHERE hu.mahasiswa_id_221053 = '$id_mahasiswa'
+ORDER BY hu.dikumpulkan_pada_221053 DESC";
+
+$result = $koneksi->query($sql);
 
 ?>
 
@@ -23,7 +38,7 @@ if($_SESSION['status'] != 'login'){
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Dashboard - Admin</title>
+        <title>Dashboard - Mahasiswa</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="../assets/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -93,32 +108,39 @@ if($_SESSION['status'] != 'login'){
                         <h1 class="mt-4">Data Hasil Ujian</h1>
                         <div class="card mb-4">
                             <div class="card-body">
-                                <table id="datatablesSimple">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Judul Ujian</th>
-                                            <th>Nilai</th>
-                                            <th>Waktu Kumpul</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Judul Ujian</th>
-                                            <th>Nilai</th>
-                                            <th>Waktu Kumpul</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Ujian Matematika</td>
-                                            <td>80</td>
-                                            <td>12.00</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <table id="datatablesSimple">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Judul Ujian</th>
+                                        <th>Nilai</th>
+                                        <th>Waktu Kumpul</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Judul Ujian</th>
+                                        <th>Nilai</th>
+                                        <th>Waktu Kumpul</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    <?php
+                                    $no = 1;
+                                    while ($row = $result->fetch_assoc()) {
+                                    ?>
+                                    <tr>
+                                        <td><?php echo $no++; ?></td>
+                                        <td><?php echo $row['judul_221053']; ?></td>
+                                        <td><?php echo $row['nilai_221053']; ?></td>
+                                        <td><?php echo $row['dikumpulkan_pada_221053']; ?></td>
+                                    </tr>
+                                    <?php
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
                             </div>
                         </div>
                     </div>
