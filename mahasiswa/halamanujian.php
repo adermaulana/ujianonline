@@ -83,7 +83,7 @@ $koneksi->close();
                     <h4>Sisa Waktu: <span id="timer"><?php echo sprintf('%02d:%02d', $exam_duration / 60, $exam_duration % 60); ?></span></h4>
 
                     <!-- Soal Ujian -->
-                    <form action="submit_ujian.php" method="POST">
+                    <form action="submit_ujian.php" method="POST" onsubmit="localStorage.removeItem('ujianTime_<?= $exam_id ?>')">
                         <input type="hidden" name="id_ujian" value="<?= $exam_id ?>">
                         <?php foreach ($questions as $question): ?>
                         <div class="mb-3">

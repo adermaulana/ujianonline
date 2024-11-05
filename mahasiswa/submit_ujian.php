@@ -39,6 +39,8 @@ $sql = "INSERT INTO hasil_ujian_221053 (id_221053, ujian_id_221053, mahasiswa_id
         VALUES (NULL, $id_ujian, $mahasiswa_id, $nilai, NOW())";
 
 if ($koneksi->query($sql) === TRUE) {
+
+
     echo "<script>
             alert('Berhasil mengirim ujian!');
             document.location='hasilujian.php';
@@ -48,4 +50,5 @@ if ($koneksi->query($sql) === TRUE) {
 }
 
 $koneksi->close();
+
 ?>

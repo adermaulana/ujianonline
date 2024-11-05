@@ -110,17 +110,22 @@ if($_SESSION['status'] != 'login'){
                                 <tbody>
                                     <?php
                                     $sql = "SELECT 
-                                            u.id_221053,
-                                            u.mata_kuliah_id_221053,
-                                            m.nama_221053 AS mata_kuliah_nama,
-                                            u.judul_221053,
-                                            u.waktu_mulai_221053,
-                                            u.waktu_selesai_221053,
-                                            u.status_221053,
-                                            u.users_id_221053
+                                                u.id_221053,
+                                                u.mata_kuliah_id_221053,
+                                                m.nama_221053 AS mata_kuliah_nama,
+                                                u.judul_221053,
+                                                u.waktu_mulai_221053,
+                                                u.waktu_selesai_221053,
+                                                u.status_221053,
+                                                u.users_id_221053
                                             FROM ujian_221053 u
                                             JOIN mata_kuliah_221053 m ON u.mata_kuliah_id_221053 = m.id_221053
                                             WHERE u.users_id_221053 = '$id_mahasiswa'
+                                            AND u.id_221053 NOT IN (
+                                                SELECT ujian_id_221053
+                                                FROM hasil_ujian_221053
+                                                WHERE mahasiswa_id_221053 = '$id_mahasiswa'
+                                            )
                                             ORDER BY u.waktu_mulai_221053 ASC";
                                     $result = $koneksi->query($sql);
 
@@ -139,7 +144,7 @@ if($_SESSION['status'] != 'login'){
                                             $count++;
                                         }
                                     } else {
-                                        echo "<tr><td colspan='7'>No exam data found for the user.</td></tr>";
+                                        echo "<tr><td colspan='7'>Tidak ada data Ujian.</td></tr>";
                                     }
 
                                     $koneksi->close();
