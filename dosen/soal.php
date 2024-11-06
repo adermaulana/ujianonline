@@ -156,7 +156,8 @@ if(isset($_GET['hal']) == "hapus"){
                                                                             FROM 
                                                                                 soal_ujian_221053 su 
                                                                             JOIN 
-                                                                                ujian_221053 u ON su.ujian_id_221053 = u.id_221053");
+                                                                                ujian_221053 u ON su.ujian_id_221053 = u.id_221053
+                                                                                WHERE u.id_221053 = '$ujian_id'");
                                         while($data = mysqli_fetch_array($tampil)):
                                     ?>
                                         <tr>
