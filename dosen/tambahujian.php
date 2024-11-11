@@ -22,10 +22,10 @@ if (isset($_POST['simpan'])) {
     $waktu_mulai = $_POST['waktu_mulai_221053'];
     $waktu_selesai = $_POST['waktu_selesai_221053'];
     $status = $_POST['status_221053'];
-    $users_id = $_POST['users_id_221053'];
+
 
     // Menyimpan data ke database
-    $simpan = mysqli_query($koneksi, "INSERT INTO ujian_221053 (judul_221053, mata_kuliah_id_221053, waktu_mulai_221053, waktu_selesai_221053, status_221053, users_id_221053) VALUES ('$nama_ujian', '$mata_kuliah_id', '$waktu_mulai', '$waktu_selesai', '$status', '$users_id')");
+    $simpan = mysqli_query($koneksi, "INSERT INTO ujian_221053 (judul_221053, mata_kuliah_id_221053, waktu_mulai_221053, waktu_selesai_221053, status_221053) VALUES ('$nama_ujian', '$mata_kuliah_id', '$waktu_mulai', '$waktu_selesai', '$status')");
 
     if ($simpan) {
         echo "<script>
@@ -107,16 +107,7 @@ if (isset($_POST['simpan'])) {
                                     <a class="nav-link" href="matakuliah.php">Lihat Mata Kuliah</a>
                                 </nav>
                             </div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#mahasiswa" aria-expanded="false" aria-controls="collapsePages">
-                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                                Data Mahasiswa
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="mahasiswa" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                    <a class="nav-link" href="mahasiswa.php">Lihat Mahasiswa</a>
-                                </nav>
-                            </div>
+
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
@@ -159,13 +150,13 @@ if (isset($_POST['simpan'])) {
                                 <!-- Opsi Jawaban A -->
                                 <div class="mb-3 col-6">
                                     <label for="waktu_mulai_221053" class="form-label">Waktu Mulai</label>
-                                    <input type="time" class="form-control" id="waktu_mulai_221053" name="waktu_mulai_221053" required>
+                                    <input type="datetime-local" class="form-control" id="waktu_mulai_221053" name="waktu_mulai_221053" required>
                                 </div>
 
                                 <!-- Opsi Jawaban B -->
                                 <div class="mb-3 col-6">
                                     <label for="waktu_selesai_221053" class="form-label">Waktu Selesai</label>
-                                    <input type="time" class="form-control" id="waktu_selesai_221053" name="waktu_selesai_221053" required>
+                                    <input type="datetime-local" class="form-control" id="waktu_selesai_221053" name="waktu_selesai_221053" required>
                                 </div>
 
                                 <!-- Opsi Jawaban C -->
@@ -177,24 +168,6 @@ if (isset($_POST['simpan'])) {
                                         <option value="nonaktif">Nonaktif</option>
                                     </select>
                                 </div>
-
-                                <div class="mb-3 col-6">
-                                    <label for="users_id_221053" class="form-label">Mahasiswa Yang Ikut</label>
-                                    <select class="form-control" id="users_id_221053" name="users_id_221053" required>
-                                        <option disabled selected>Pilih Mahasiswa</option>
-                                        <?php
-                                            $no = 1;
-                                            $tampil = mysqli_query($koneksi, "SELECT * FROM users_221053 WHERE role_221053 = 'mahasiswa'");
-                                            while($data = mysqli_fetch_array($tampil)):
-                                        ?>
-                                        <option value="<?= $data['id_221053'] ?>"><?= $data['nama_221053'] ?></option>
-                                        <?php
-                                            endwhile; 
-                                        ?>
-                                    </select>
-                                </div>
-
-
                                 <button type="submit" name="simpan" class="btn btn-primary">Tambah Ujian</button>
                             </form>
                             </div>

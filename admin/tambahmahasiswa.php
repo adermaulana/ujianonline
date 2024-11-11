@@ -25,7 +25,7 @@ if (isset($_POST['simpan'])) {
               </script>";
     } else {
         // Hash the password using md5
-        $hashedPassword = md5($_POST['password']);
+        $hashedPassword = md5($_POST['password_221053']);
         $active = true;
         // Insert new user into the database
         $simpan = mysqli_query($koneksi, "INSERT INTO users_221053 (nama_221053, username_221053, password_221053,active_221053, role_221053) VALUES ('$_POST[name]', '$username', '$hashedPassword','$active','$_POST[role]')");

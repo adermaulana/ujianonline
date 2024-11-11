@@ -4,6 +4,8 @@ include '../koneksi.php';
 
 session_start();
 
+date_default_timezone_set('Asia/Makassar');
+
 $id_mahasiswa = $_SESSION['id_mahasiswa'];
 
 if($_SESSION['status'] != 'login'){
@@ -90,7 +92,7 @@ if($_SESSION['status'] != 'login'){
                 </nav>
             </div>
             <div id="layoutSidenav_content">
-                <main>
+            <main>
                 <div class="container-fluid px-4">
                     <h1 class="mt-4">Mulai Ujian</h1>
                     <div class="card mb-4">
@@ -116,35 +118,86 @@ if($_SESSION['status'] != 'login'){
                                                 u.judul_221053,
                                                 u.waktu_mulai_221053,
                                                 u.waktu_selesai_221053,
-                                                u.status_221053,
-                                                u.users_id_221053
+                                                u.status_221053
                                             FROM ujian_221053 u
                                             JOIN mata_kuliah_221053 m ON u.mata_kuliah_id_221053 = m.id_221053
-                                            WHERE u.users_id_221053 = '$id_mahasiswa'
+                                            JOIN mahasiswa_mata_kuliah_221053 mmk ON m.id_221053 = mmk.id_mata_kuliah_221053
+                                            WHERE mmk.id_mahasiswa_221053 = '$id_mahasiswa'
                                             AND u.id_221053 NOT IN (
                                                 SELECT ujian_id_221053
                                                 FROM hasil_ujian_221053
                                                 WHERE mahasiswa_id_221053 = '$id_mahasiswa'
                                             )
+                                            AND u.status_221053 = 'aktif'
+                                            AND u.waktu_selesai_221053 >= NOW()  /* Menampilkan ujian yang belum selesai */
                                             ORDER BY u.waktu_mulai_221053 ASC";
                                     $result = $koneksi->query($sql);
 
-                                    $count = 1;
                                     if ($result->num_rows > 0) {
+                                        $no = 1;
                                         while ($row = $result->fetch_assoc()) {
+                                            // Format waktu
+                                            $waktu_mulai = date('d-m-Y H:i', strtotime($row["waktu_mulai_221053"]));
+                                            $waktu_selesai = date('d-m-Y H:i', strtotime($row["waktu_selesai_221053"]));
+                                            
+                                            $current_time = time();
+                                            $start_time = strtotime($row["waktu_mulai_221053"]);
+                                            $end_time = strtotime($row["waktu_selesai_221053"]);
+
+                                            // Status ujian
+                                            if ($current_time < $start_time) {
+                                                $status = '<span class="badge bg-warning">Belum Mulai</span>';
+                                                $btn_class = "btn-secondary";
+                                                $btn_disabled = "disabled";
+                                                $countdown = floor(($start_time - $current_time) / 60); // dalam menit
+                                                if ($countdown < 60) {
+                                                    $time_left = $countdown . " menit lagi";
+                                                } else {
+                                                    $hours = floor($countdown / 60);
+                                                    $minutes = $countdown % 60;
+                                                    $time_left = $hours . " jam " . $minutes . " menit lagi";
+                                                }
+                                            } elseif ($current_time >= $start_time && $current_time <= $end_time) {
+                                                $status = '<span class="badge bg-success">Sedang Berlangsung</span>';
+                                                $btn_class = "btn-primary";
+                                                $btn_disabled = "";
+                                                $countdown = floor(($end_time - $current_time) / 60); // dalam menit
+                                                if ($countdown < 60) {
+                                                    $time_left = "Tersisa " . $countdown . " menit";
+                                                } else {
+                                                    $hours = floor($countdown / 60);
+                                                    $minutes = $countdown % 60;
+                                                    $time_left = "Tersisa " . $hours . " jam " . $minutes . " menit";
+                                                }
+                                            } else {
+                                                $status = '<span class="badge bg-danger">Selesai</span>';
+                                                $btn_class = "btn-secondary";
+                                                $btn_disabled = "disabled";
+                                                $time_left = "Waktu habis";
+                                            }
+
                                             echo "<tr>";
-                                            echo "<td>" . $count . "</td>";
+                                            echo "<td>" . $no++ . "</td>";
                                             echo "<td>" . $row["mata_kuliah_nama"] . "</td>";
                                             echo "<td>" . $row["judul_221053"] . "</td>";
-                                            echo "<td>" . $row["waktu_mulai_221053"] . "</td>";
-                                            echo "<td>" . $row["waktu_selesai_221053"] . "</td>";
-                                            echo "<td>" . $row["status_221053"] . "</td>";
-                                            echo "<td><a href='mulaiujian.php?id=" . $row["id_221053"] . "' class='btn btn-primary'>Mulai</a></td>";
+                                            echo "<td>" . $waktu_mulai . "</td>";
+                                            echo "<td>" . $waktu_selesai . "</td>";
+                                            echo "<td>
+                                                    " . $status . "
+                                                    <br>
+                                                    <small class='text-muted'>" . $time_left . "</small>
+                                                </td>";
+                                            echo "<td>
+                                                    <button type='button' 
+                                                        class='btn " . $btn_class . " " . ($btn_disabled ? 'disabled' : '') . "'
+                                                        " . ($btn_disabled ? '' : "onclick=\"window.location.href='mulaiujian.php?id=" . $row["id_221053"] . "'\"") . ">
+                                                        Mulai
+                                                    </button>
+                                                </td>";
                                             echo "</tr>";
-                                            $count++;
                                         }
                                     } else {
-                                        echo "<tr><td colspan='7'>Tidak ada data Ujian.</td></tr>";
+                                        echo "<tr><td colspan='7' class='text-center'>Tidak ada ujian yang tersedia.</td></tr>";
                                     }
 
                                     $koneksi->close();
@@ -154,7 +207,7 @@ if($_SESSION['status'] != 'login'){
                         </div>
                     </div>
                 </div>
-                </main>
+            </main>
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
@@ -173,5 +226,13 @@ if($_SESSION['status'] != 'login'){
         <script src="../assets/js/scripts.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="../assets/js/datatables-simple-demo.js"></script>
+
+                        <!-- Tambahkan Script untuk Auto Refresh -->
+        <script>
+
+        setTimeout(function(){
+                window.location.reload();
+        }, 60000);
+        </script>
     </body>
 </html>

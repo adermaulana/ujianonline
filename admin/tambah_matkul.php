@@ -13,17 +13,33 @@ if($_SESSION['status'] != 'login'){
 
 }
 
-if(isset($_GET['hal']) == "hapus"){
+$id_mahasiswa = $_GET['id_mahasiswa'];
 
-    $hapus = mysqli_query($koneksi, "DELETE FROM users_221053 WHERE id_221053 = '$_GET[id]'");
-  
-    if($hapus){
+// Mengambil data mahasiswa
+$query_mahasiswa = mysqli_query($koneksi, "SELECT * FROM users_221053 WHERE id_221053 = '$id_mahasiswa'");
+$mahasiswa = mysqli_fetch_array($query_mahasiswa);
+
+// Proses tambah mata kuliah
+if(isset($_POST['submit'])) {
+    $mata_kuliah = $_POST['mata_kuliah'];
+    
+    // Insert ke tabel mahasiswa_mata_kuliah_221053
+    $query = mysqli_query($koneksi, "INSERT INTO mahasiswa_mata_kuliah_221053 
+                                    (id_mahasiswa_221053, id_mata_kuliah_221053) 
+                                    VALUES ('$id_mahasiswa', '$mata_kuliah')");
+    
+    if($query) {
         echo "<script>
-        alert('Hapus data sukses!');
-        document.location='mahasiswa.php';
-        </script>";
+                alert('Mata kuliah berhasil ditambahkan!');
+                window.location.href = 'mahasiswa.php';
+              </script>";
+    } else {
+        echo "<script>
+                alert('Gagal menambahkan mata kuliah!');
+              </script>";
     }
-  }
+}
+
 
 ?>
 
@@ -135,57 +151,40 @@ if(isset($_GET['hal']) == "hapus"){
                 </nav>
             </div>
             <div id="layoutSidenav_content">
-            <main>
-                <div class="container-fluid px-4">
-                    <h1 class="mt-4">Data Mahasiswa</h1>
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <a class="btn btn-success" href="tambahmahasiswa.php">Tambah Data</a>
-                        </div>
-                        <div class="card-body">
-                            <table id="datatablesSimple">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Nama</th>
-                                        <th>Username</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tfoot>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Nama</th>
-                                        <th>Username</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </tfoot>
-                                <tbody>
-                                    <?php
-                                        $no = 1;
-                                        $tampil = mysqli_query($koneksi, "SELECT * FROM users_221053 where role_221053 = 'mahasiswa'");
-                                        while($data = mysqli_fetch_array($tampil)):
-                                    ?>
-                                    <tr>
-                                        <td><?= $no++ ?></td>
-                                        <td><?= $data['nama_221053'] ?></td>
-                                        <td><?= $data['username_221053'] ?></td>
-                                        <td>
-                                            <a class="btn btn-warning btn-sm" href="editmahasiswa.php?hal=edit&id=<?= $data['id_221053']?>">Edit</a>
-                                            <a class="btn btn-danger btn-sm" href="mahasiswa.php?hal=hapus&id=<?= $data['id_221053']?>" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')">Hapus</a>
-                                            <a class="btn btn-primary btn-sm" href="tambah_matkul.php?id_mahasiswa=<?= $data['id_221053']?>">Tambah Mata Kuliah</a>
-                                            <a class="btn btn-info btn-sm" href="lihat_matkul.php?id_mahasiswa=<?= $data['id_221053']?>">Lihat Mata Kuliah</a>
-                                        </td>
-                                    </tr>
-                                    <?php
-                                        endwhile; 
-                                    ?>
-                                </tbody>
-                            </table>
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">Tambah Mata Kuliah</h1>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>Mahasiswa: <?= $mahasiswa['nama_221053'] ?></h5>
+                            </div>
+                            <div class="card-body">
+                                <form method="POST">
+                                    <div class="mb-3">
+                                        <label for="mata_kuliah" class="form-label">Pilih Mata Kuliah</label>
+                                        <select class="form-select" name="mata_kuliah" required>
+                                            <option value="">Pilih Mata Kuliah</option>
+                                            <?php
+                                            $query_matkul = mysqli_query($koneksi, "SELECT * FROM mata_kuliah_221053");
+                                            while($matkul = mysqli_fetch_array($query_matkul)) {
+                                                // Cek apakah mata kuliah sudah diambil
+                                                $check = mysqli_query($koneksi, "SELECT * FROM mahasiswa_mata_kuliah_221053 
+                                                                            WHERE id_mahasiswa_221053 = '$id_mahasiswa' 
+                                                                            AND id_mata_kuliah_221053 = '".$matkul['id_221053']."'");
+                                                if(mysqli_num_rows($check) == 0) {
+                                                    echo "<option value='".$matkul['id_221053']."'>".$matkul['nama_221053']."</option>";
+                                                }
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <button type="submit" name="submit" class="btn btn-primary">Tambah</button>
+                                    <a href="mahasiswa.php" class="btn btn-secondary">Kembali</a>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </main>
+                </main>
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">

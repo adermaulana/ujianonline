@@ -16,14 +16,23 @@ if($_SESSION['status'] != 'login'){
 }
 
 $sql = "SELECT 
-          id_221053,
-          judul_221053,
-          waktu_mulai_221053,
-          waktu_selesai_221053
-        FROM ujian_221053
-        WHERE users_id_221053 = $id_mahasiswa
-        ORDER BY waktu_mulai_221053 ASC
-        LIMIT 1";
+    u.id_221053,
+    u.judul_221053,
+    u.waktu_mulai_221053,
+    u.waktu_selesai_221053 
+FROM ujian_221053 u
+JOIN mata_kuliah_221053 m ON u.mata_kuliah_id_221053 = m.id_221053
+JOIN mahasiswa_mata_kuliah_221053 mmk ON m.id_221053 = mmk.id_mata_kuliah_221053
+WHERE mmk.id_mahasiswa_221053 = $id_mahasiswa
+AND u.id_221053 NOT IN (
+    SELECT ujian_id_221053 
+    FROM hasil_ujian_221053 
+    WHERE mahasiswa_id_221053 = $id_mahasiswa
+)
+AND u.status_221053 = 'aktif'
+AND u.waktu_selesai_221053 >= NOW()
+ORDER BY u.waktu_mulai_221053 ASC 
+LIMIT 1";
 $result = $koneksi->query($sql);
 
 if ($result->num_rows > 0) {

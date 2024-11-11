@@ -106,16 +106,7 @@ $jumlah_matakuliah = $rowmatakuliah["id_221053"];
                                     <a class="nav-link" href="matakuliah.php">Lihat Mata Kuliah</a>
                                 </nav>
                             </div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#mahasiswa" aria-expanded="false" aria-controls="collapsePages">
-                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                                Data Mahasiswa
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="mahasiswa" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                    <a class="nav-link" href="mahasiswa.php">Lihat Mahasiswa</a>
-                                </nav>
-                            </div>
+
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
@@ -136,6 +127,7 @@ $jumlah_matakuliah = $rowmatakuliah["id_221053"];
                                         <th>No</th>
                                         <th>Kode</th>
                                         <th>Nama Matakuliah</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
@@ -143,6 +135,7 @@ $jumlah_matakuliah = $rowmatakuliah["id_221053"];
                                         <th>No</th>
                                         <th>Kode</th>
                                         <th>Nama Matakuliah</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
@@ -164,6 +157,9 @@ $jumlah_matakuliah = $rowmatakuliah["id_221053"];
                                         <td><?= $no++ ?></td>
                                         <td><?= $data['kode_221053'] ?></td>
                                         <td><?= $data['nama_221053'] ?></td>
+                                        <td>
+                                            <a class="btn btn-info" href="lihat_mahasiswa_matkul.php?id_matkul=<?= $data['id_221053'] ?>">Lihat Mahasiswa</a>
+                                        </td>
                                     </tr>
                                     <?php
                                         endwhile; 
