@@ -15,6 +15,15 @@ if($_SESSION['status'] != 'login'){
 
 }
 
+$id_matkul = $_GET['id_matkul'];
+$id_dosen = $_SESSION['id_dosen'];
+
+$query = mysqli_query($koneksi, "
+    SELECT * FROM mata_kuliah_221053 
+    WHERE id_221053 = '$id_matkul' AND id_dosen_221053 = '$id_dosen'
+");
+$matkul = mysqli_fetch_array($query);
+
 if (isset($_POST['simpan'])) {
     // Mengambil data dari form
     $nama_ujian = $_POST['judul_221053'];
@@ -30,12 +39,12 @@ if (isset($_POST['simpan'])) {
     if ($simpan) {
         echo "<script>
                 alert('Simpan data sukses!');
-                document.location='ujian.php';
+                document.location='matakuliah.php';
             </script>";
     } else {
         echo "<script>
                 alert('Simpan data Gagal!');
-                document.location='ujian.php';
+                document.location='matakuliah.php';
             </script>";
     }
 }
@@ -86,7 +95,7 @@ if (isset($_POST['simpan'])) {
                                 Dashboard
                             </a>
                             <div class="sb-sidenav-menu-heading">Interface</div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                            <!-- <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Data Ujian
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -96,7 +105,7 @@ if (isset($_POST['simpan'])) {
                                     <a class="nav-link" href="ujian.php">Lihat Ujian</a>
                                     <a class="nav-link" href="tambahujian.php">Tambah Ujian</a>
                                 </nav>
-                            </div>
+                            </div> -->
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#matkul" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Data Mata Kuliah
@@ -124,26 +133,16 @@ if (isset($_POST['simpan'])) {
                             <div class="card-body">
                             <form  method="POST">
                                 <!-- Pilih Ujian -->
+                                <input type="hidden" name="mata_kuliah_id_221053" value="<?= $id_matkul ?>">
+
+                                <div class="mb-3 col-6">
+                                    <label for="judul_221053" class="form-label">Mata Kuliah</label>
+                                    <input type="text" class="form-control" value="<?= $matkul['kode_221053'] ?> - <?= $matkul['nama_221053'] ?>" readonly>
+                                </div>
 
                                 <div class="mb-3 col-6">
                                     <label for="judul_221053" class="form-label">Nama Ujian</label>
                                     <input type="text" class="form-control" id="judul_221053" name="judul_221053" required>
-                                </div>
-
-                                <div class="mb-3 col-6">
-                                    <label for="mata_kuliah_id_221053" class="form-label">Mata Kuliah</label>
-                                    <select class="form-control" id="mata_kuliah_id_221053" name="mata_kuliah_id_221053" required>
-                                        <option disabled selected>Pilih Matkul</option>
-                                        <?php
-                                            $no = 1;
-                                            $tampil = mysqli_query($koneksi, "SELECT * FROM mata_kuliah_221053 WHERE id_dosen_221053 = '$id_dosen'");
-                                            while($data = mysqli_fetch_array($tampil)):
-                                        ?>
-                                        <option value="<?= $data['id_221053'] ?>"><?= $data['kode_221053'] ?> - <?= $data['nama_221053'] ?></option>
-                                        <?php
-                                            endwhile; 
-                                        ?>
-                                    </select>
                                 </div>
 
 
@@ -163,7 +162,7 @@ if (isset($_POST['simpan'])) {
                                 <div class="mb-3 col-6">
                                     <label for="status_221053" class="form-label">Status</label>
                                     <select class="form-control" id="status_221053" name="status_221053" required>
-                                        <option disabled selected>Pilih Status</option>
+                                        <option value="" disabled selected>Pilih Status</option>
                                         <option value="aktif">Aktif</option>
                                         <option value="nonaktif">Nonaktif</option>
                                     </select>

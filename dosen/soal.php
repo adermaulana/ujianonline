@@ -74,7 +74,7 @@ if(isset($_GET['hal']) == "hapus"){
                                 Dashboard
                             </a>
                             <div class="sb-sidenav-menu-heading">Interface</div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                            <!-- <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Data Ujian
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -84,7 +84,7 @@ if(isset($_GET['hal']) == "hapus"){
                                     <a class="nav-link" href="ujian.php">Lihat Ujian</a>
                                     <a class="nav-link" href="tambahujian.php">Tambah Ujian</a>
                                 </nav>
-                            </div>
+                            </div> -->
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#matkul" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Data Mata Kuliah

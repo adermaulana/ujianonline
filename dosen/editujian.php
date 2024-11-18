@@ -5,8 +5,6 @@ include '../koneksi.php';
 session_start();
 
 
-$id_dosen = $_SESSION['id_dosen'];
-
 if($_SESSION['status'] != 'login'){
 
     session_unset();
@@ -16,20 +14,24 @@ if($_SESSION['status'] != 'login'){
 
 }
 
-if(isset($_GET['hal'])){
-    if($_GET['hal'] == "edit"){
-        $tampil = mysqli_query($koneksi, "SELECT * FROM ujian_221053 WHERE id_221053 = '$_GET[id]'");
-        $data = mysqli_fetch_array($tampil);
-        if($data){
-            $id = $data['id_221053'];
-            $nama_ujian = $data['judul_221053'];
-            $mata_kuliah_id = $data['mata_kuliah_id_221053'];
-            $waktu_mulai = $data['waktu_mulai_221053'];
-            $waktu_selesai = $data['waktu_selesai_221053'];
-            $status = $data['status_221053'];
+
+    if(isset($_GET['hal'])){
+        if($_GET['hal'] == "edit"){
+            $tampil = mysqli_query($koneksi, "SELECT ujian_221053.*, mata_kuliah_221053.kode_221053, mata_kuliah_221053.nama_221053 
+                                              FROM ujian_221053
+                                              JOIN mata_kuliah_221053 ON ujian_221053.mata_kuliah_id_221053 = mata_kuliah_221053.id_221053
+                                              WHERE ujian_221053.id_221053 = '$_GET[id]'");
+            $data = mysqli_fetch_array($tampil);
+            if($data){
+                $id = $data['id_221053'];
+                $nama_ujian = $data['judul_221053'];
+                $mata_kuliah_id = $data['mata_kuliah_id_221053'];
+                $waktu_mulai = $data['waktu_mulai_221053'];
+                $waktu_selesai = $data['waktu_selesai_221053'];
+                $status = $data['status_221053'];
+            }
         }
     }
-}
 
 //Perintah Mengubah Data
 if (isset($_POST['simpan'])) {
@@ -53,12 +55,12 @@ if (isset($_POST['simpan'])) {
     if ($simpan) {
         echo "<script>
                 alert('Edit data sukses!');
-                document.location='ujian.php';
+                document.location='lihatujian.php?id_ujian=" . $id . "';
             </script>";
     } else {
         echo "<script>
                 alert('Edit data Gagal!');
-                document.location='ujian.php';
+                document.location='lihatujian.php?id_ujian=" . $id . "';
             </script>";
     }
 }
@@ -109,7 +111,7 @@ if (isset($_POST['simpan'])) {
                                 Dashboard
                             </a>
                             <div class="sb-sidenav-menu-heading">Interface</div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                            <!-- <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Data Ujian
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -119,7 +121,7 @@ if (isset($_POST['simpan'])) {
                                     <a class="nav-link" href="ujian.php">Lihat Ujian</a>
                                     <a class="nav-link" href="tambahujian.php">Tambah Ujian</a>
                                 </nav>
-                            </div>
+                            </div> -->
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#matkul" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Data Mata Kuliah
@@ -146,27 +148,16 @@ if (isset($_POST['simpan'])) {
                             <div class="card-body">
                             <form  method="POST">
                                 <!-- Pilih Ujian -->
+                                <input type="hidden" name="mata_kuliah_id_221053" value="<?= $mata_kuliah_id ?>">
+                                <div class="mb-3 col-6">
+                                    <label for="judul_221053" class="form-label">Mata Kuliah</label>
+                                    <input type="text" class="form-control" value="<?= $data['kode_221053'] ?> - <?= $data['nama_221053'] ?>" readonly>
+                                </div>
 
                                 <div class="mb-3 col-6">
                                     <label for="judul_221053" class="form-label">Nama Ujian</label>
                                     <input type="text" class="form-control" id="judul_221053" value="<?= $nama_ujian ?>" name="judul_221053" required>
                                 </div>
-
-                                <div class="mb-3 col-6">
-                                    <label for="mata_kuliah_id_221053" class="form-label">Mata Kuliah</label>
-                                    <select class="form-control" id="mata_kuliah_id_221053" name="mata_kuliah_id_221053" required>
-                                        <option disabled selected>Pilih Matkul</option>
-                                        <?php
-                                            $tampil = mysqli_query($koneksi, "SELECT * FROM mata_kuliah_221053");
-                                            while ($data = mysqli_fetch_array($tampil)):
-                                                // Menandai opsi yang sesuai dengan mata kuliah yang sudah dipilih
-                                                $selected = ($data['id_221053'] == $mata_kuliah_id) ? 'selected' : '';
-                                        ?>
-                                        <option value="<?= $data['id_221053'] ?>" <?= $selected ?>><?= $data['kode_221053'] ?> - <?= $data['nama_221053'] ?></option>
-                                        <?php endwhile; ?>
-                                    </select>
-                                </div>
-
 
 
                                 <!-- Opsi Jawaban A -->

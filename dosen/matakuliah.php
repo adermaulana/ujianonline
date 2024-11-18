@@ -85,7 +85,7 @@ $jumlah_matakuliah = $rowmatakuliah["id_221053"];
                                 Dashboard
                             </a>
                             <div class="sb-sidenav-menu-heading">Interface</div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                            <!-- <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Data Ujian
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -95,7 +95,7 @@ $jumlah_matakuliah = $rowmatakuliah["id_221053"];
                                     <a class="nav-link" href="ujian.php">Lihat Ujian</a>
                                     <a class="nav-link" href="tambahujian.php">Tambah Ujian</a>
                                 </nav>
-                            </div>
+                            </div> -->
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#matkul" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Data Mata Kuliah
@@ -141,15 +141,17 @@ $jumlah_matakuliah = $rowmatakuliah["id_221053"];
                                 <tbody>
                                     <?php
                                         $no = 1;
-                                        $tampil = mysqli_query($koneksi, "
-                                            SELECT 
-                                                mk.id_221053,
-                                                mk.kode_221053, 
-                                                mk.nama_221053,
-                                                u.nama_221053 as nama_dosen
-                                            FROM mata_kuliah_221053 mk
-                                            JOIN users_221053 u ON mk.id_dosen_221053 = u.id_221053
-                                            WHERE mk.id_dosen_221053 = '$id_dosen' AND u.role_221053 = 'dosen'
+                                        $tampil = mysqli_query($koneksi, "SELECT 
+                                            mk.id_221053,
+                                            mk.kode_221053, 
+                                            mk.nama_221053,
+                                            u.nama_221053 as nama_dosen,
+                                            uj.id_221053 as id_ujian,
+                                            uj.status_221053 as status_ujian
+                                        FROM mata_kuliah_221053 mk
+                                        JOIN users_221053 u ON mk.id_dosen_221053 = u.id_221053
+                                        LEFT JOIN ujian_221053 uj ON mk.id_221053 = uj.mata_kuliah_id_221053
+                                        WHERE mk.id_dosen_221053 = '$id_dosen' AND u.role_221053 = 'dosen'
                                         ");
                                         while($data = mysqli_fetch_array($tampil)):
                                     ?>
@@ -159,6 +161,11 @@ $jumlah_matakuliah = $rowmatakuliah["id_221053"];
                                         <td><?= $data['nama_221053'] ?></td>
                                         <td>
                                             <a class="btn btn-info" href="lihat_mahasiswa_matkul.php?id_matkul=<?= $data['id_221053'] ?>">Lihat Mahasiswa</a>
+                                        <?php if($data['id_ujian']): ?>
+                                            <a class="btn btn-primary" href="lihatujian.php?id_ujian=<?= $data['id_ujian'] ?>">Lihat Ujian</a>
+                                        <?php else: ?>
+                                            <a class="btn btn-success" href="tambahujian.php?id_matkul=<?= $data['id_221053'] ?>">Tambah Ujian</a>
+                                        <?php endif; ?>
                                         </td>
                                     </tr>
                                     <?php
