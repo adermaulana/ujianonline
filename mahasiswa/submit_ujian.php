@@ -25,14 +25,18 @@ foreach ($_POST as $key => $value) {
 
 // Hitung jumlah jawaban yang benar
 $correct_count = 0;
-foreach ($answers as $id_soal => $answer) {
-    if ($answer == $correct_answers[$id_soal]) {
-        $correct_count++;
-    }
-}
+$nilai = 0; // Default nilai 0 jika tidak ada soal
 
-// Hitung nilai
-$nilai = ($correct_count / count($answers)) * 100;
+if (count($answers) > 0) {
+    foreach ($answers as $id_soal => $answer) {
+        if ($answer == $correct_answers[$id_soal]) {
+            $correct_count++;
+        }
+    }
+
+    // Hitung nilai
+    $nilai = ($correct_count / count($answers)) * 100;
+}
 
 // Simpan hasil ujian ke database
 $sql = "INSERT INTO hasil_ujian_221053 (id_221053, ujian_id_221053, mahasiswa_id_221053, nilai_221053, dikumpulkan_pada_221053)
